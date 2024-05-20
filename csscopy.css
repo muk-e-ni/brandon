@@ -289,7 +289,7 @@ body.active { overflow: hidden; }
 
 .header.active {
   position: fixed;
-  background-color: lightblue;
+  background-color: whitesmoke;
   border: 1px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   box-shadow: var(--shadow);
