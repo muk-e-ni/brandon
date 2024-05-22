@@ -138,7 +138,7 @@ ion-icon { pointer-events: none; }
 address { font-style: normal; }
 
 html {
-  font-family: var(--ff-dm-sans);
+  font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: 10px;
   scroll-behavior: smooth;
 }
@@ -274,24 +274,26 @@ body.active { overflow: hidden; }
 .header {
   position: absolute;
   top: 5px;
-  left: 30rem;
+  left: 25rem;
   right: 30rem;
   z-index: 4;
   color: aqua;
   border-block-end: 1px solid var(--white_10);
+  padding-bottom: 30px;
+  margin-bottom: 200px;
   margin-top: 5px;
   list-style: none;
   display: flex;
-  width: 70%;
+  width: 5%;
   justify-content: space-around;
 
 }
 
 .header.active {
   position: fixed;
-  background-color: whitesmoke;
+  background-color: lightblue;
   border: 1px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(193, 183, 183, 0.2);
   box-shadow: var(--shadow);
   transform: translateY(-100%);
   animation: slideInTop 0.5s ease forwards;
@@ -316,7 +318,7 @@ body.active { overflow: hidden; }
 
 .header-action-btn ion-icon { --ionicon-stroke-width: 40px; }
 
-.nav-open-btn { color: var(--satin-sheen-gold); }
+.nav-open-btn { color: black; }
 
 .navbar {
   position: fixed;
@@ -324,7 +326,7 @@ body.active { overflow: hidden; }
   left: -300px;
   max-width: 300px;
   width: 100%;
-  background-color: var(--phthalo-green-2);
+  background-color: whitesmoke;
   height: 100vh;
   padding: 30px 15px;
   z-index: 2;
@@ -346,7 +348,7 @@ body.active { overflow: hidden; }
 }
 
 .nav-close-btn {
-  color: var(--white);
+  color: red;
   font-size: 22px;
 }
 
@@ -355,6 +357,7 @@ body.active { overflow: hidden; }
 .navbar-list { border-block-start: 1px solid var(--white_10); }
 
 .navbar-item { border-block-end: 1px solid var(--white_10); }
+.navbar-link:hover{ color:hotpink;}
 
 .navbar-link {
   color: black;
@@ -853,29 +856,40 @@ size: 50px; }
  @media (max-width: 1150.400px) {
   button.menu-btn {
       display: block;
-      margin-right: 2em;
+      margin-right: 10em;
   }}
 
-@media (min-width: 575px) {
+@media (min-width: 300px) and (max-width: 767px) {
 
   /**
    * REUSED STYLE
    */
 
   .container {
-    max-width: 540px;
+    max-width: 300px;
     width: 100%;
     margin-inline: auto;
+
   }
 
+.header.active{display:none ;
+visibility: hidden; color: transparent;}
 
+.header-action{ left: 30rem;
+  right: 30rem;
+  margin-left: 20px;
+  padding-right: 50%;
+  
 
+}
   /**
    * HEADER
    */
 
   .header .container { max-width: unset; }
-
+section.about{
+  margin-top: 50px;
+}
 }
 
 
@@ -1125,7 +1139,6 @@ size: 50px; }
   .overlay { display: none; }
 
   .navbar,
-  .navbar.active,
   .navbar-list,
   .navbar-item { all: unset; }
 
