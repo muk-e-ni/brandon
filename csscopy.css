@@ -3,7 +3,7 @@
 \*-----------------------------------*/
 
 /**
- * copyright 2022 codewithsadee
+ * copyright 2024 brandon
  */
 
 
@@ -857,7 +857,49 @@ size: 50px; }
   button.menu-btn {
       display: block;
       margin-right: 10em;
-  }}
+  }
+ .header {
+  position: absolute;
+  top: 5px;
+  left: 25rem;
+  right: 30rem;
+  z-index: 4;
+  color: aqua;
+  border-block-end: 1px solid var(--white_10);
+  padding-bottom: 30px;
+  margin-bottom: 200px;
+  margin-top: 5px;
+  list-style: none;
+  display: flex;
+  width: 5%;
+  justify-content: space-around;
+
+}
+
+.header.active {
+  position: fixed;
+  background-color: lightblue;
+  border: 1px;
+  box-shadow: 0 2px 4px rgba(193, 183, 183, 0.2);
+  box-shadow: var(--shadow);
+  transform: translateY(-100%);
+  animation: slideInTop 0.5s ease forwards;
+  padding: 10px;
+  margin-right: 5px;
+  border-radius: 30px;
+}
+
+@keyframes slideInTop {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(0); }
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px 30px;
+}}
 
 @media (min-width: 300px) and (max-width: 767px) {
 
