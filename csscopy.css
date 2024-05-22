@@ -853,7 +853,7 @@ size: 50px; }
 /**
  * responsive for large than 575px screen
  */
- @media (max-width: 1150.400px) {
+ @media (min-width:800px) and (max-width: 1150.400px) {
   button.menu-btn {
       display: block;
       margin-right: 10em;
