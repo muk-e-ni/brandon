@@ -3,7 +3,7 @@
 \*-----------------------------------*/
 
 /**
- * copyright 2024 brandon
+ * copyright 2024 Brandon
  */
 
 
@@ -853,13 +853,13 @@ size: 50px; }
 /**
  * responsive for large than 575px screen
  */
- @media (min-width:800px) and (max-width: 1150.400px) {
+ @media  (max-width: 1150.400px) {
   button.menu-btn {
       display: block;
-      margin-right:5em;
+      margin-right: 10em;
   }}
 
-@media (min-width: 300px) and (max-width: 767px) {
+@media (min-width: 300px) and (max-width: 600px) {
 
   /**
    * REUSED STYLE
@@ -900,7 +900,7 @@ section.about{
  * responsive for large than 768px screen
  */
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
 
   /**
    * CUSTOM PROPERTY
@@ -1013,7 +1013,7 @@ section.about{
  * responsive for large than 992px screen
  */
 
-@media (min-width: 992px ) and(max-width:1200px){
+@media (min-width: 992px) {
 
   /**
    * CUSTOM PROPERTY
@@ -1100,7 +1100,7 @@ section.about{
  * responsive for large than 1200px screen
  */
 
-@media (min-width: 1200px) {
+@media (min-width: 1100px) {
 
   /**
    * CUSTOM PROPERTY
@@ -1129,7 +1129,8 @@ section.about{
   .grid-list { grid-template-columns: repeat(4, 1fr); }
 
 
-
+.body{
+  margin:10px;}
   /**
    * HEADER
    */
