@@ -1,1 +1,36 @@
+// assets/css/style.scss
+
+// Example SCSS variables
+$primary-color: #3498db;
+$secondary-color: #e74c3c;
+
+// Example SCSS nested styles
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .header {
+        background-color: $primary-color;
+        color: white;
+        padding: 20px;
+    }
+
+    .content {
+        padding: 20px;
+        border: 1px solid $secondary-color;
+
+        p {
+            line-height: 1.5;
+        }
+
+        a {
+            color: $primary-color;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
 
