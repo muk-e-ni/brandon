@@ -218,8 +218,8 @@ body.active { overflow: hidden; }
 .grid-list {
   display: grid;
   gap: 30px;
+  width: 100%;
 }
-
 .section-subtitle {
   color: var(--satin-sheen-gold);
   text-transform: uppercase;
@@ -273,8 +273,10 @@ body.active { overflow: hidden; }
 
 .header {
   position: absolute;
-  top: 5px;
-  left: 25rem;
+  top: 0;
+  left: 0;
+
+  width: 75%;
   right: 30rem;
   z-index: 4;
   color: aqua;
@@ -284,9 +286,8 @@ body.active { overflow: hidden; }
   margin-top: 5px;
   list-style: none;
   display: flex;
-  width: 5%;
   justify-content: space-around;
-
+  
 }
 
 .header.active {
@@ -298,8 +299,15 @@ body.active { overflow: hidden; }
   transform: translateY(-100%);
   animation: slideInTop 0.5s ease forwards;
   padding: 10px;
-  margin-right: 5px;
+  padding-right: 50px;
+  padding-left: 50px;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 0 auto;
   border-radius: 30px;
+  width: 75%;
+  height: 70px;
 }
 
 @keyframes slideInTop {
@@ -349,7 +357,7 @@ body.active { overflow: hidden; }
 
 .nav-close-btn {
   color: red;
-  font-size: 22px;
+  font-size: 15px;
 }
 
 .nav-close-btn ion-icon { --ionicon-stroke-width: 100px; }
@@ -369,7 +377,7 @@ body.active { overflow: hidden; }
 .overlay {
   position: fixed;
   top: 0;
-  left: 0;
+  left:0;
   width: 100%;
   height: 100vh;
   background-color: var(--black_50);
@@ -393,6 +401,10 @@ body.active { overflow: hidden; }
   display: grid;
   gap: 60px;
   padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  max-width: 1200px;
+  margin-inline: auto;
 }
 
 .about{
@@ -401,14 +413,16 @@ body.active { overflow: hidden; }
 }
 .about p{
   color: blueviolet;
-  font-size: large;
+  font-size: small;
   font-weight: 900;
   font-size: large;
   
 }
 .about-content  p.section-subtitle{
   color: black;
+  color: burlywood
 }
+
 .about h2.section-title{
   color: black;
 
@@ -428,7 +442,7 @@ body.active { overflow: hidden; }
 
 .about-list-item ion-icon {
   flex-shrink: 0;
-  font-size: 22px;
+  font-size: 15px;
   color: red;
 }
 
@@ -437,10 +451,13 @@ body.active { overflow: hidden; }
   font-size: var(--fs-6);
   font-weight: var(--fw-600);
 }
+.btn-primary{
+  background-color: lightskyblue;
+}
 
 .about-list-item:first-child { margin-block-end: 6px; }
 
-.about-banner { box-shadow: -40px 60px 0 -20px pink; }
+.about-banner { box-shadow: -40px 60px 0 -20px lightsteelblue; }
 
 
 
@@ -449,7 +466,7 @@ body.active { overflow: hidden; }
 
 
 /*-----------------------------------*\
-  #Achievements
+  #projects intro
 \*-----------------------------------*/
 
 .service {
@@ -491,20 +508,129 @@ body.active { overflow: hidden; }
   --icon-scale: 0.9;
 }
 
+/* Project card */
+#projects .feature-card {
+  background: linear-gradient(135deg, #f9f9f9 80%, #e0e7ef 100%);
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08), 0 1.5px 4px 0 rgba(0,0,0,0.04);
+  border-radius: 24px;
+  padding: 32px 28px 28px 28px;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  transition: box-shadow 0.2s, transform 0.2s;
+  margin-bottom: 0;
+  position: relative;
+}
+#projects .feature-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.16), 0 3px 8px 0 rgba(0,0,0,0.08);
+  transform: translateY(-4px) scale(1.02);
+}
+#projects .card-title {
+  color: #1a2a3a;
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  word-break: break-word;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+#projects .feature-card p {
+  color: #3a3a3a;
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+  line-height: 1.5;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-height: 48px;
+}
+#projects .card-btn {
+  background: #ffd700;
+  color: #1a2a3a;
+  border-radius: 50%;
+  padding: 12px;
+  font-size: 1.6rem;
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+  transition: background 0.2s, color 0.2s;
+}
+#projects .card-btn:hover {
+  background: #1a2a3a;
+  color: #ffd700;
+}
+#projects .btn-secondary {
+  margin-top: 18px;
+  align-self: flex-end;
+}
+@media (max-width: 600px) {
+  #projects .feature-card {
+    padding: 18px 10px 18px 10px;
+    min-height: 160px;
+  }
+  #projects .card-title {
+    font-size: 1.3rem;
+  }
+  #projects .feature-card p {
+    font-size: 1.1rem;
+    min-height: 32px;
+  }
+}
+@media (min-width: 900px) {
+  #projects.grid-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  #projects .feature-card {
+    min-height: 260px;
+    padding: 40px 36px 36px 36px;
+    font-size: 1.7rem;
+  }
+  #projects .card-title {
+    font-size: 2.5rem;
+  }
+  #projects .feature-card p {
+    font-size: 1.7rem;
+    min-height: 56px;
+  }
+}
+@media (min-width: 1300px) {
+  #projects.grid-list {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
+  }
+  #projects .feature-card {
+    min-height: 280px;
+    padding: 48px 40px 40px 40px;
+  }
+  #projects .card-title {
+    font-size: 2.8rem;
+  }
+  #projects .feature-card p {
+    font-size: 1.9rem;
+    min-height: 64px;
+  }
+}
 
 
 
 
 
 /*-----------------------------------*\
-  #FEATURE
+  #github projects 
 \*-----------------------------------*/
 
 .feature { padding-block-start: 0; }
 
 .feature-content {
   background-color: whitesmoke;
-  background-image: url('../images/feature-card-bg-1.png'),
+  background-image: url(''),
                     url('../images/feature-card-bg-2.png');
   background-repeat: no-repeat, no-repeat;
   background-size: auto, contain;
@@ -546,6 +672,7 @@ body.active { overflow: hidden; }
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
+  width: 100%;
   transition: var(--transition-2);
 }
 
