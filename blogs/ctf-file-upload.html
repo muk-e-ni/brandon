@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<title>
+    DNS in Detail
+</title>
+
+<link rel="icon" type="image/png" href="/images/logo/logo_purple.png">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS</title>
+    <link rel="stylesheet" href="/assets/css/articles.css">
+
+    <!--section [Credit to https://favicongenerator.io]-->
+<link rel="icon" href="/favicon-package/favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="icon" href="/favicon-package/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon-package/apple-touch-icon.png">
+<link rel="manifest" href="/favicon-package/site.webmanifest">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+</head>
+<body >
+    <section class="article-container">
+        <div class="article-header">
+   <h1> DNS in Detail </h1>  <br>
+   <p class="meta">
+    <span> By Brandon Oliver </span> | <span> October 2025</span> </p>
+<h2> Module:	DNS in Detail </h2>
+<h2>Platform 	<a href="https://tryhackme.com">THM</a></h2> </div>
+
+<div class="article-cover"> 
+    <img src="/images/blog/passiverecon.png" alt="passive recon">
+</div>
+<div class="article-body">
+    <p>This module explores the two types of reconnaissance: passive and active. It delves into some <br>
+         tools that can be used to carry out passive reconnaissance like whois, nslookup and dig. It also <br>
+         establishes foundtation knowledge on online tools such as DNSDumpster and Shondan.io. </p> <br>
+
+
+
+
+ 
+
+<h3>Pasive Vs. Active Reconnaissance</h3>
+<p>Passive reconnaissance focuses on getting publically available info that can be useful <br>
+    when exploiting a target. Active recon on the other hand, focuses on actively engaging or interacting <br>
+     with the target to get relevant info. </p> <br>
+
+     <h4> Tasks </h4>
+     <img src="/images/blog/passiveRecon/passive-recon-task1.png" alt="" height="300px"> <br>
+
+
+
+ 
+<h3>Whois </h3>
+<p>
+ The whois protocoal listens on TCP port 43. I learn that it can be used to get information like:
+ <ul>
+    <li> Registrar of the domain</li>
+    <li> Contact info of registrant</li>
+    <li> Creation, update and expiration dates of the domain</li>
+    <li> Name server that resolves the domain</li>
+ </ul>   
+</p> <br>
+<img src="/images/blog/passiveRecon/passive-recon-task2.png" alt="" height="300px"> <br>
+<h4> Steps </h4>
+<p> I connected to the VPN on my Linux virtual box.
+
+</p> <br>
+<img src="/images/blog/passiveRecon/connecting-vpn.png" alt="" height="300px"> <br>
+<p>I then run whois tryhackme on another terminal:</p> <br>
+<img src="/images/blog/passiveRecon/whois-command.png" alt="" height="300px">
+
+<h3> nslookup and DIG</h3>
+<P>
+    Nslookup stands for Name Server Lookup while dig stands for Domain Information Groper. <br> Nslookup can be used with three main parameters:
+    <ul>
+        <li> Options        </li>
+        <li>Domain Name</li>
+        <li>Server</li>
+    </ul>
+
+    <b><u>Query Type</u></b> <br>
+<ul>
+    <li>Ipv4 addresses</li>
+<li> AAAA: IPv6 addresses </li>
+<li>CNAME: Canonical Name</li>
+<li>MX: Mail servers</li>
+<li>SOA: Start of Authority </li>
+<li>TXT: TXT records </li>
+</ul>
+ 
+Eg. Nslookup –type=A tryhackme.com 1.1.1.1 OR nslookup – type=a 
+Using dig:
+<pre> <code>dig @1.1.1.1 tryhackme.com MX/A/TXT </code></pre> 
+
+
+</P>
+
+<h4> Task </h4>
+<p>
+<img src="/images/blog/passiveRecon/TXT-screenshot.png" alt="" height="300px"> <br>
+
+in this task I used dig as follows: <br>
+
+<img src="/images/blog/passiveRecon/dig-usage.png" alt=""> <br>
+
+</p>
+<h3> DNSDumpster</h3>
+<p>
+    DNSDumpster provides more info compared to nslookup or dig. It gets information about sub domains <br>
+    and lists all information graphically. 
+
+    
+</p>
+<h4> Task </h4>
+<p>
+    <img src="/images/blog/passiveRecon/dns-dumpster.png" alt=""> <br>
+    I used DNSDumbster to test and look for other subdomains of tryhackme.com as shown below. <br>
+
+    <img src="/images/blog/passiveRecon/dns-dumpster-inuse.png" alt="">
+
+</p>
+<h3> shodan.io </h3>
+<p>
+    This website allows us to get valuable information about the client’s network. It can tell us the ip address, <br>
+    the hosting company, geographical information and server type and version.
+</p>
+<h4> Task </h4>
+<p>
+<img src="/images/blog/passiveRecon/shodan-task.png" alt=""> <br>
+I visited shodan.io and searched for apache server, then clicked on the report. I found <br>
+out that the US has the highest number of Apache servers. Approx. 4.3 million followed by <br>
+Germany with 1.5 million. <br>
+
+<img src="/images/blog/passiveRecon/shodan-report-onapache.png" alt=""> <br>
+
+<img src="/images/blog/passiveRecon/shodan-task2.png" alt="" height="300px"> <br>
+<p>
+    For this task, I scrolled through the Apache search report, where <br>
+     I found that the most common port used by the server is port 80 followed by <br>
+      port 443 and port 8080. <br>
+      <img src="/images/blog/passiveRecon/shodan-results-task2.png" alt=""> <br>
+
+</p> <br>
+<p>
+    <img src="/images/blog/passiveRecon/shodan-task3.png" alt="">
+</p>
+
+</p>
+<h3> Conclusion </h3>
+<p>
+    This module was an interesting way to learn about passive reconnaissance. I learnt various commands <br>
+    such as whois, nslookup and dig. I also learned to use online services like DNSDumpster and Shodan.io to <br>
+     get more information about the client. 
+
+</p>
+</div>
+</body>
+</html>

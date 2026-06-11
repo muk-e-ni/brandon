@@ -9,16 +9,18 @@
   <!-- 
     - primary meta tag
   -->
-  <title>Brandon  - personal website</title>
-  <meta name="title" content="Blog">
-  <meta name="description" content="">
+  <title>Brandon - Cybersecurity & Development</title>
+  <meta name="title" content="Brandon - Personal Portfolio">
+  <meta name="description" content="Cybersecurity student, developer, and CTF enthusiast passionate about security and technology">
 
-  <!-- 
-    - favicon
-  -logo
-  -->
-  <link rel="shortcut icon" href="">
 
+<!--section [Credit to https://favicongenerator.io]-->
+<link rel="icon" href="/favicon-package/favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="icon" href="/favicon-package/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon-package/apple-touch-icon.png">
+<link rel="manifest" href="/favicon-package/site.webmanifest">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <!-- 
     - custom css link
   -->
@@ -29,11 +31,8 @@
   -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- 
-    - preload images
-  -->
-  <link rel="preload" as="image" href="/images/home.jpg">
 
 </head>
 
@@ -41,514 +40,373 @@
 
   <!-- 
     - #HEADER
-  -->
+    
+  --> <div class="extended-nav">
+          <div class="logo-nav">
+        <a href="/templates/bcreative_page.html" class="logo">
+          <img src="/images/logo/logo_white.png" width="100" height="20" alt="Brandon Logo" class="logo-light">
+          <img src="/images/logo/logo_teal.png" width="100" height="20" alt="Brandon Logo" class="logo-dark">
+        </a>
+      </div>
+                <button class="header-action-btn theme-toggle" aria-label="Toggle theme" data-theme-toggler>
+          <ion-icon name="moon-outline" class="moon-icon"></ion-icon>
+          <ion-icon name="sunny-outline" class="sun-icon"></ion-icon>
+        </button>
+      </div>
 
   <header class="header" data-header>
+    
     <div class="container">
 
-      <!--<a href="#" class="logo">
-        <img src="images/wilmer-martinez-SQxcZIIZHV8-unsplash.jpg" width="102" height="48" alt="fly logo">
-      </a> -->
 
       <nav class="navbar" data-navbar>
-
         <div class="navbar-top">
-          <a href="#" class="logo">
-            <img src="/images/wilmer-martinez-SQxcZIIZHV8-unsplash.jpg" width="102" height="48" alt="fly logo">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_white.png" width="100" height="25" alt="Brandon Logo">
           </a>
-
           <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
             <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
           </button>
         </div>
 
         <ul class="navbar-list">
-
           <li class="navbar-item">
             <a href="#home" class="navbar-link" data-nav-link>Home</a>
           </li>
-
           <li class="navbar-item">
-            <a href="#services" class="navbar-link" data-nav-link>About Me</a>
+            <a href="/templates/aboutme.html" class="navbar-link" data-nav-link>About Me</a>
           </li>
-
           <li class="navbar-item">
             <a href="/templates/projects.html" class="navbar-link" data-nav-link>Projects</a>
           </li>
-
           <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>Achievements</a>
+            <a href="/templates/writeups.html" class="navbar-link" data-nav-link>Write-ups</a>
           </li>
-
           <li class="navbar-item">
-            <a href="#" class="navbar-link" data-nav-link>Contact</a>
+            <a href="/templates/contacts.html" class="navbar-link" data-nav-link>Contact</a>
           </li>
-
         </ul>
-
       </nav>
 
       <div class="header-action">
-
-        <button class="header-action-btn" aria-label="search">
-          <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
-        </button>
-
 
 
         <button class="header-action-btn nav-open-btn" aria-label="menu" data-nav-toggler>
           <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
         </button>
-
       </div>
 
       <div class="overlay" data-nav-toggler data-overlay></div>
-
     </div>
   </header>
-
-
-
 
 
   <main>
     <article>
       
       <!-- 
-        - #ABOUT
+        - #HERO SECTION
       -->
-
-      <section class="section about" id="about" aria-label="about">
+      <section class="section hero" id="home" aria-label="hero">
         <div class="container">
-
-          <div class="about-content">
-
-            <p class="section-subtitle">Get To Know Me</p>
-
-            <h2 class="h2 section-title">Hola! Welcome to My Website. </h2>
-
-            <p class="section-text">
-           Feel welcome here. So excited to share my experiences with you.
-              
-
+          <div class="hero-content">
+            <h1 class="hero-title">Cybersecurity Student & Developer</h1>
+            <p class="hero-text">
+              Passionate about penetration testing, blockchain technology, and solving complex security challenges through CTF competitions.
             </p>
-
-            <ul class="about-list">
-
-              <li class="about-list-item">
-                <ion-icon name="checkmark-outline" aria-hidden="ture"></ion-icon>
-
-                <p class="item-text"> Student at Zetech University.</p>
-              </li>
-
-              <li class="about-list-item">
-                <ion-icon name="checkmark-outline" aria-hidden="ture"></ion-icon>
-
-                <p class="item-text"> Love coding, playing CTFs and baking.</p>
-              </li>
-
-            </ul>
-
-            <a href="#" class="btn btn-primary">Read More...</a>
-
+            <div class="hero-actions">
+              <a href="/templates/aboutme.html" class="btn btn-primary">About</a>
+              <a href="/templates/projects.html" class="btn btn-secondary">Projects</a>
+            </div>
           </div>
-
-          <figure class="about-banner img-holder" style="--width: 450; --height: 400;">
-            <img src="/images/prof.png" width="400" height="450" loading="lazy" alt="about banner"
-              class="img-cover">
-          </figure>
-
+          <div class="hero-visual">
+            <div class="code-animation">
+              <div class="terminal-window">
+                <div class="terminal-header">
+                  <div class="terminal-buttons">
+                    <span class="terminal-btn close"></span>
+                    <span class="terminal-btn minimize"></span>
+                    <span class="terminal-btn maximize"></span>
+                  </div>
+                  <span class="terminal-title">bash — 80×24</span>
+                </div>
+                <div class="terminal-content">
+                  <span class="code-line">$ whoami</span>
+                  <span class="code-line output">6r4nd0n — cybersecurity_enthusiast</span>
+                  <span class="code-line">$ cat interests.txt</span>
+                  <span class="code-line output">CTF Challenges • Java • Python • Network Security</span>
+                  <span class="code-line">$ _</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- 
-        - #Achievements
+        - #ABOUT
       -->
+      <section class="section about" id="about" aria-label="about">
+        <div class="container">
+          <div class="about-content">
+            <p class="section-subtitle">Get To Know Me</p>
+            <h2 class="h2 section-title">Hola! Welcome to My Website</h2>
+            <p class="section-text">
+              I'm a passionate cybersecurity student with expertise in penetration testing, computer networking, and vulnerability assessment. Driven by solving challenging problems and continuously learning new technologies.
+            </p>
 
+            <ul class="about-list">
+              <li class="about-list-item">
+                <ion-icon name="checkmark-outline" aria-hidden="true"></ion-icon>
+                <p class="item-text">Computer Science Student at Zetech University</p>
+              </li>
+              <li class="about-list-item">
+                <ion-icon name="checkmark-outline" aria-hidden="true"></ion-icon>
+                <p class="item-text">CTF Player & Security Researcher</p>
+              </li>
+              <li class="about-list-item">
+                <ion-icon name="checkmark-outline" aria-hidden="true"></ion-icon>
+                <p class="item-text">Network Engineer</p>
+              </li>
+            </ul>
+
+            <a href="/templates/about.html" class="btn btn-primary">Read More...</a>
+          </div>
+
+          <figure class="about-banner img-holder" style="--width: 450; --height: 400;">
+            <img src="/images/prof.png" width="400" height="450" loading="lazy" alt="Brandon Mukeni" class="img-cover">
+          </figure>
+        </div>
+      </section>
+
+      <!-- 
+        - #SKILLS & EXPERTISE
+      -->
       <section class="section service" aria-label="service">
         <div class="container">
-
+          <p class="section-subtitle">Areas of Expertise</p>
+          <h2 class="h2 section-title">What I Do</h2>
+          
           <ul class="grid-list">
-
             <li>
               <div class="service-card">
-                <ion-icon name="diamond-outline" aria-hidden="true"></ion-icon>
-
+                <ion-icon name="code-slash-outline" aria-hidden="true"></ion-icon>
                 <h3 class="h3">
-                  <a href="#" class="card-title">Python Expert</a>
+                  <a href="#" class="card-title">Python Development</a>
                 </h3>
+                <p class="card-text">Building security tools and automation scripts</p>
               </div>
             </li>
 
             <li>
               <div class="service-card">
                 <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
-
                 <h3 class="h3">
-                  <a href="#" class="card-title">Blockchain Enshusiast</a>
+                  <a href="#" class="card-title">Cybersecurity</a>
                 </h3>
+                <p class="card-text">Penetration testing & vulnerability assessment</p>
               </div>
             </li>
 
             <li>
               <div class="service-card">
-                <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
-
+                <ion-icon name="logo-react" aria-hidden="true"></ion-icon>
                 <h3 class="h3">
-                  <a href="#" class="card-title">Spanish Learner</a>
+                  <a href="#" class="card-title">Web Development</a>
                 </h3>
+                <p class="card-text">Full-stack applications with modern frameworks like React</p>
               </div>
             </li>
 
             <li>
               <div class="service-card">
-                <ion-icon name="business-outline" aria-hidden="true"></ion-icon>
-
+                <ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>
                 <h3 class="h3">
-                  <a href="#" class="card-title">Computer Networking Expert</a>
+                  <a href="#" class="card-title">Networking</a>
                 </h3>
+                <p class="card-text">Network security and infrastructure design</p>
               </div>
             </li>
-
           </ul>
-
         </div>
       </section>
 
-
-
-
       <!-- 
-        projects- #
+        - #PROJECTS
       -->
-
       <section class="section feature" aria-label="feature">
         <div class="container">
           <div class="feature-content has-before">
-<center>
-            <p class="section-title section-header">My Projects</p>
-
-            <h2 class="h2 section-subtitle">Here are some of my projects</h2>
-
+            <p class="section-subtitle">My Work</p>
+            <h2 class="h2 section-title">Featured Projects</h2>
             <p class="section-text">
-              I have worked on several projects, some of which are listed below. <br>Feel free to check them out!
+              Here are some of my recent projects that showcase my skills in development and cybersecurity.
             </p>
-              <a href="/templates/projects.html" class="btn btn-secondary">View</a>
-</center> <br>
-            <ul>
-              <li>
-               <div id ="projects" class="grid-list">
-                <!--projects will be dynamically be loaded here--></div></li>
-
-            </ul>
+            
+            <div id="projects" class="grid-list">
+              <!-- Projects will be dynamically loaded here -->
             </div>
+            
+            <div class="projects-cta">
+             <center> <a href="/templates/projects.html" class="btn btn-secondary">View All Projects</a></center>
+            </div>
+          </div>
         </div>
-       
       </section>
 
-
-
-
-
       <!-- 
-        - #Hobbies
+        - #HOBBIES
       -->
-
       <section class="offer" aria-label="offer">
-
-        <div class="offer-content section" style="background-image: url('')">
+        <div class="offer-content section">
           <div class="container">
-
-            <p class="section-subtitle">Love Baking</p>
-
-            <h2 class="h2 section-title"> Need a simple cake recipe? I got You</h2>
-
+            <p class="section-subtitle">Beyond Code</p>
+            <h2 class="h2 section-title">When I'm Not Coding</h2>
             <p class="section-text">
-              No, I'm not a chef but let's say baking, cooking and eating are kinda my hobbies. Funny fact i don'f have a hobby. things kinds bore me when i do them tooo 
-              many times. May be thats why i don't bake too often so that i have a long lasting hobby :
+              I believe in maintaining a balanced life. When I'm not solving security challenges or building applications, 
+              you'll find me exploring new recipes in the kitchen or learning a new language.
             </p>
 
-            <a href="#" class="btn btn-primary">Bake now!</a>
-
+            <div class="hobbies-grid">
+              <div class="hobby-item">
+                <ion-icon name="cafe-outline"></ion-icon>
+                <span>Baking & Cooking</span>
+              </div>
+              <div class="hobby-item">
+                <ion-icon name="language-outline"></ion-icon>
+                <span>Spanish Learning</span>
+              </div>
+              <div class="hobby-item">
+                <ion-icon name="shirt-outline"></ion-icon>
+                <span>Fashion & dress-up</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="offer-banner has-bg-image" style="background-image: url('/images/cup-of-coffee-1280537_1280.jpg')"></div>
-
       </section>
-
-
-
-
 
       <!-- 
-        - #Blog
+        - #BLOG/WRITEUPS
       -->
+      <section class="blog-section">
+        <div class="featured-articles">
+          <div class="intro-column">
+            <h2 class="section-title">Latest Writeups</h2>
+            <p class="section-desc">
+              A collection of my Capture The Flag (CTF) challenge writeups — exploring vulnerabilities, payloads, and defense strategies.
+            </p>
+            <a href="/templates/writeups.html" class="btn btn-secondary">View All →</a>
+          </div>
 
-      <section class="section flight" aria-label="privet flight">
-        <div class="container">
-
-          <ul class="grid-list">
-
-            <li>
-              <div class="flight-content">
-
-
-                <h2 class="h2 section-title">Blog</h2>
-               
-
-                <p class="section-text">
-                  sometimes I post mini-blogs talking about several contoversial topics. If you'd like to read some of my article, I'd recommend you
-                  start by reading these...
-
-
-                </p>
-
-              </div>
-            </li>
-
-            <li>
-              <div class="flight-card">
-
-                <h3 class="card-title">
-                  Article 
-                  <ion-icon name="book" aria-hidden="true"></ion-icon>
-                  1
-                </h3>
-
-                <div class="card-banner">
-                  <img src="./assets/images/flight-1.png" width="263" height="84" loading="lazy"
-                    alt="" class="w-100">
-                </div>
-                <div class="card-content">
-
-                </div>
-
-
-                <a href="#" class="btn btn-primary">Read Now</a>
-
-              </div>
-            </li>
-
-            <li>
-              <div class="flight-card">
-
-                <h3 class="card-title">
-                  Article
-                  <ion-icon name="book" aria-hidden="true"></ion-icon>
-                  2
-                </h3>
-
-                <div class="card-banner">
-                  <img src="./assets/images/flight-1.png" width="263" height="84" loading="lazy"
-                    alt="" class="w-100">
-                </div>
-
-                <div class="card-content">
-
-                </div>
-
-                <a href="#" class="btn btn-primary">Read Now</a>
-
-              </div>
-            </li>
-
-          </ul>
-
+          <div class="articles-column">
+            <div class="blog-container" id="featured-writeups">
+              <!-- Featured writeups will be dynamically loaded here -->
+            </div>
+          </div>
         </div>
       </section>
-
-
-
-
 
       <!-- 
         - #NEWSLETTER
       -->
-
-      <section class="section newsletter has-bg-image"
-        style="background-image: url('')" aria-label="newsletter">
+      <section class="section newsletter" aria-label="newsletter">
         <div class="container">
-
-          <div>
-            <p class="section-subtitle">Subscribe Now</p>
-
-            <h2 class="h2 section-title">Receive updates whenever I post by subscribing</h2>
+          <div class="newsletter-content">
+            <p class="section-subtitle">Stay Updated</p>
+            <h2 class="h2 section-title">Receive updates whenever I post</h2>
           </div>
 
-          <div>
+          <div class="newsletter-form-container">
             <form action="" class="newsletter-form">
-              <input type="email" name="email_address" placeholder="Enter email address" class="input-field">
-
+              <input type="email" name="email_address" placeholder="Enter email address" class="input-field" required>
               <button type="submit" class="btn btn-secondary">
                 Subscribe
-
                 <ion-icon name="mail" aria-hidden="true"></ion-icon>
               </button>
             </form>
           </div>
-
         </div>
       </section>
 
     </article>
   </main>
 
-
-
-
-
   <!-- 
     - #FOOTER
   -->
-
-  <footer class="footer" style="background-image: url('')">
+  <footer class="footer">
     <div class="container">
-
       <div class="footer-top section grid-list">
-
         <div class="footer-brand">
-
-          <a href="#" class="logo">
-            <img src="" width="102" height="48" alt="">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_teal.png" width="100" height="48" alt="Brandon Logo">
           </a>
-
           <p class="footer-text">
-            Want to know more about me? follow my social media accounts!
-            peace out!
+            Cybersecurity student passionate about technology, security, and innovation.
           </p>
-
         </div>
 
         <ul class="footer-list">
+          
+            <p class="footer-list-title">Connect</p>
 
-          <li>
-            <p class="footer-list-title">Socials</p>
+                      <li>
+            <a href="https://github.com/muk-e-ni/" class="footer-link">
+              <ion-icon name="logo-github"></ion-icon>Github</a> 
+          </li>
+                      <a href="https://www.linkedin.com/in/brandon-mukeni-46276236b/" class="footer-link">
+              <ion-icon name="logo-linkedin"></ion-icon>LinkedIn</a> 
           </li>
 
-          <li>
-            <a href="#" class="footer-link">
-              <ion-icon name="logo-instagram"></ion-icon></a> 
-
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">
-              <ion-icon name="logo-twitter"></ion-icon></a>
-          </li>
-          <li>
-            <a href="#" class="footer-link"> 
-              <ion-icon name="logo-pinterest"></ion-icon></a> 
-
-          </li>
-
-          <li>
-            <a href="#" class="footer-link"> 
-              <ion-icon name="logo-medium"></ion-icon></a> 
-
-          </li>
-          <li>
-            <a href="#" class="footer-link">
-              <ion-icon name="logo-discord"></ion-icon></a> 
-
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">
-              <ion-icon name="logo-threads"></ion-icon></a> 
-
-          </li>
-
+                  <li> <a href="https://discord.com/users/1130262077957746739" class="footer-link"> <ion-icon name="logo-discord"></ion-icon> Discord</a> </li>
         </ul>
 
         <ul class="footer-list">
-
           <li>
-            <p class="footer-list-title">Links</p>
+            <p class="footer-list-title">Explore</p>
           </li>
-
-          <li>
-            <a href="#" class="footer-link">Projects</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Contact</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">Blog</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">About Me</a>
-          </li>
-
-          <li>
-            <a href="#" class="footer-link">FAQs</a>
-          </li>
-
+          <li><a href="/templates/projects.html" class="footer-link">Projects</a></li>
+          <li><a href="/templates/writeups.html" class="footer-link">Writeups</a></li>
+          <li><a href="/templates/about.html" class="footer-link">About</a></li>
         </ul>
 
         <ul class="footer-list">
-
           <li>
             <p class="footer-list-title">Contact</p>
           </li>
-
-          <li class="footer-list-item">
-            <ion-icon name="call" aria-hidden="true"></ion-icon>
-
-            <a href="tel:+254794425022" class="footer-link">+254758861709</a>
-          </li>
-
           <li class="footer-list-item">
             <ion-icon name="mail" aria-hidden="true"></ion-icon>
-
-            <a href="mailto:brandonoliverjohn@gmail.com" class="footer-link">brandonoliverjohn@gmail.com</a>
+            <a href="mailto:contact@brandonmukeni.com" class="footer-link">Email Me</a>
           </li>
-
           <li class="footer-list-item">
             <ion-icon name="location" aria-hidden="true"></ion-icon>
-
-            <address class="address">
-              Nairobi, Kenya
-            </address>
+            <address class="address">Nairobi, Kenya</address>
           </li>
-
         </ul>
-
       </div>
 
       <div class="footer-bottom">
-
-        <center> <p> &copy; 2024 Brandon Mukeni. All rights reserved.</p> </center>
-
-
+        <p>&copy; 2025 Brandon Mukeni. All rights reserved.</p>
+        <p class="footer-credit">Made with love and bugs</p>
       </div>
-
     </div>
   </footer>
-
-
-
-
 
   <!-- 
     - #BACK TO TOP
   -->
-
   <a href="#top" class="back-top-btn" aria-label="back to top" data-back-top-btn>
     <ion-icon name="arrow-up-outline" aria-hidden="true"></ion-icon>
   </a>
-
-
-
-
 
   <!-- 
     - custom js link
   -->
   <script src="/assets/js/jscopy.js" defer></script>
+  <script src="/assets/js/theme.js" defer></script>
+  <script src="/assets/js/index.js" defer></script>
 
   <!-- 
     - ionicon link
@@ -557,5 +415,4 @@
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 </body>
-
 </html>

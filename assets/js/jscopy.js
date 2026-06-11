@@ -1,11 +1,14 @@
 'use strict';
 
-
+document.addEventListener('DOMContentLoaded', function() {
+    loadFeaturedProjects();
+    loadFeaturedWriteups();
+    setupSmoothScrolling();
+});
 
 /**
  * add event on element
  */
-
 const addEventOnElem = function (elem, type, callback) {
   if (elem.length > 1) {
     for (let i = 0; i < elem.length; i++) {
@@ -16,12 +19,9 @@ const addEventOnElem = function (elem, type, callback) {
   }
 }
 
-
-
 /**
  * navbar toggle
  */
-
 const navbar = document.querySelector("[data-navbar]");
 const navTogglers = document.querySelectorAll("[data-nav-toggler]");
 const navbarLinks = document.querySelectorAll("[data-nav-link]");
@@ -43,12 +43,9 @@ const closeNavbar = function () {
 
 addEventOnElem(navbarLinks, "click", closeNavbar);
 
-
-
 /**
  * active header & back top btn when window scroll down to 100px
  */
-
 const header = document.querySelector("[data-header]");
 const backTopBtn = document.querySelector("[data-back-top-btn]");
 
@@ -64,7 +61,9 @@ const activeElemOnScroll = function () {
 
 addEventOnElem(window, "scroll", activeElemOnScroll);
 
-/** getting projects from github api */
+/** 
+ * getting projects from github api 
+ */
 const username = 'muk-e-ni';
 const projectsContainer = document.getElementById('projects');
 
@@ -93,7 +92,6 @@ if (projectsContainer) {
         `;
         projectsContainer.appendChild(projectCard);
       });
-
     })
     .catch(error => {
       projectsContainer.innerHTML = '<p>Failed to load GitHub projects.</p>';
@@ -102,3 +100,205 @@ if (projectsContainer) {
 } else {
   console.error('No element with id="projects" found.');
 }
+
+/**
+ * Load featured writeups from JSON file
+ */
+function loadFeaturedWriteups() {
+    const writeupsContainer = document.getElementById('featured-writeups');
+    if (!writeupsContainer) return;
+
+    // Load writeups from the JSON file
+    fetch('posts.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(writeups => {
+            // Only show 2 writeups on the index page
+            const displayWriteups = writeups.slice(0, 2);
+            
+            writeupsContainer.innerHTML = displayWriteups.map(writeup => `
+                <div class="flight-card">
+                    <div class="card-banner">
+                        <img src="${writeup.image}" width="263" height="80" loading="lazy" alt="${writeup.title}" class="w-100">
+                        <div class="card-badge">CTF Writeup</div>
+                        <div class="hover-preview">${writeup.preview}</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="difficulty medium">Challenge</span>
+                            <span class="date">${writeup.date}</span>
+                        </div>
+                        <h3 class="card-title">${writeup.title}</h3>
+                        <p class="writeup-excerpt">${writeup.excerpt}</p>
+                        <p class="read-time">${writeup.preview}</p>
+                        <a href="${writeup.url}" class="btn btn-secondary">Read Writeup</a>
+                    </div>
+                </div>
+            `).join('');
+        })
+        .catch(error => {
+            console.error('Error loading writeups:', error);
+            writeupsContainer.innerHTML = '<p>Failed to load writeups. Please check back later.</p>';
+        });
+}
+
+/**
+ * Load featured projects (hardcoded fallback)
+ */
+function loadFeaturedProjects() {
+    const projectsContainer = document.getElementById('projects');
+    if (!projectsContainer) return;
+
+    // This is your fallback if GitHub API fails
+    const featuredProjects = [
+        {
+            title: "Network Security Scanner",
+            description: "Python-based tool for network vulnerability assessment and port scanning",
+            tags: ["Python", "Networking", "Security"],
+            link: "/templates/projects.html#network-scanner"
+        },
+        {
+            title: "Blockchain Voting System",
+            description: "Secure voting platform built on Ethereum blockchain with smart contracts",
+            tags: ["Solidity", "Web3", "React"],
+            link: "/templates/projects.html#blockchain-voting"
+        }
+    ];
+
+    // Only use fallback if no GitHub projects were loaded
+    if (projectsContainer.children.length === 0) {
+        projectsContainer.innerHTML = featuredProjects.map(project => `
+            <div class="feature-card">
+                <h3 class="card-title">${project.title}</h3>
+                <p>${project.description}</p>
+                <div class="project-tags">
+                    ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
+                </div>
+                <a href="${project.link}" class="card-btn" aria-label="View ${project.title}">
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                </a>
+            </div>
+        `).join('');
+    }
+}
+
+function setupSmoothScrolling() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Add CSS for new elements
+const additionalStyles = `
+.project-tags {
+    display: flex;
+    gap: 8px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.project-tag {
+    background: var(--accent-primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.difficulty {
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.difficulty.easy { background: #d4edda; color: #155724; }
+.difficulty.medium { background: #fff3cd; color: #856404; }
+.difficulty.hard { background: #f8d7da; color: #721c24; }
+
+.read-time {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 10px 0;
+}
+
+.date {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.writeup-excerpt {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 10px 0;
+}
+
+/* Card Badge */
+.card-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--accent-primary);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.card-banner {
+    position: relative;
+}
+
+/* Blog container layout for 2 writeups */
+.blog-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .blog-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animation for cards */
+.flight-card {
+    transition: all 0.3s ease;
+}
+
+.flight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px var(--shadow-color);
+}
+`;
+
+// Inject additional styles
+const styleSheet = document.createElement('style');
+styleSheet.textContent = additionalStyles;
+document.head.appendChild(styleSheet);

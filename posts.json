@@ -1,0 +1,18 @@
+[
+  {
+    "title": "HackTheBox Module: Linux Fundamentals",
+    "image": "/images/blog/linuxfundamentals.png",
+    "excerpt": "In this challenge, I exploited a vulnerable login form using SQL injection to gain access to the admin panel...",
+    "date": "12/10/2025",
+    "url": "blogs/introduction-to-networking.html",
+    "preview": " EXPLORING KALI LINUX"
+  },
+  {
+    "title": "TryHackMe Module: Passive Recon",
+    "image": "/images/blog/passiverecon.png",
+    "excerpt": "This writeup explores how I found and exploited a file upload vulnerability to execute arbitrary code on the target...",
+    "date": "9/10/2025",
+    "url": "blogs/ctf-file-upload.html",
+    "preview":" GAIN KNOWLEDGE ON DNS"
+  }
+]
