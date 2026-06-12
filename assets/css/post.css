@@ -1,0 +1,230 @@
+
+
+/* ########## Individual post styling ###########*/
+
+/* ── Layout ───────────────────────────────────────────────────────────────── */
+.post-article {
+  padding-block: 60px 80px;
+  min-height: 70vh;
+}
+
+.post-article .container {
+  max-width: 740px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+/* ── Post header ──────────────────────────────────────────────────────────── */
+.post-header {
+  margin-bottom: 40px;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.post-type-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--accent-clr, #0d9488);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+.post-date {
+  font-size: 13px;
+  color: var(--text-secondary, #6b7280);
+}
+
+.post-title {
+  font-size: clamp(24px, 5vw, 36px);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  color: var(--title-clr, inherit);
+}
+
+.post-excerpt {
+  font-size: 17px;
+  color: var(--text-secondary, #6b7280);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+.post-divider {
+  height: 2px;
+  background: var(--border-clr, #e5e7eb);
+  border-radius: 2px;
+}
+
+/* ── Post body ────────────────────────────────────────────────────────────── */
+.post-content {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text-clr, inherit);
+}
+
+.post-content h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-clr, #e5e7eb);
+}
+
+.post-content h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.post-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.post-content p {
+  margin-bottom: 20px;
+}
+
+.post-content a {
+  color: var(--accent-clr, #0d9488);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.post-content a:hover {
+  opacity: 0.8;
+}
+
+.post-content ul,
+.post-content ol {
+  padding-left: 24px;
+  margin-bottom: 20px;
+}
+
+.post-content li {
+  margin-bottom: 8px;
+}
+
+/* ── Code blocks ──────────────────────────────────────────────────────────── */
+.post-content code {
+  font-family: "Fira Code", "Cascadia Code", "Consolas", monospace;
+  font-size: 14px;
+  background: var(--code-bg, #1e2937);
+  color: var(--code-clr, #a5f3fc);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.post-content pre {
+  background: var(--code-bg, #1e2937);
+  border-radius: 8px;
+  padding: 20px;
+  overflow-x: auto;
+  margin-bottom: 24px;
+  border-left: 3px solid var(--accent-clr, #0d9488);
+}
+
+.post-content pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--code-clr, #a5f3fc);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── Blockquotes ──────────────────────────────────────────────────────────── */
+.post-content blockquote {
+  border-left: 4px solid var(--accent-clr, #0d9488);
+  background: var(--blockquote-bg, rgba(13, 148, 136, 0.06));
+  padding: 12px 20px;
+  margin: 24px 0;
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+  color: var(--text-secondary, #6b7280);
+}
+
+/* ── Images ───────────────────────────────────────────────────────────────── */
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-block: 24px;
+  display: block;
+  border: 1px solid var(--border-clr, #e5e7eb);
+}
+
+/* Add a caption style for images followed by em text */
+.post-content img + em {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary, #6b7280);
+  margin-top: -16px;
+  margin-bottom: 24px;
+}
+
+/* ── Tables ───────────────────────────────────────────────────────────────── */
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.post-content th {
+  background: var(--code-bg, #1e2937);
+  color: var(--accent-clr, #0d9488);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.post-content td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-clr, #e5e7eb);
+}
+
+.post-content tr:hover td {
+  background: var(--blockquote-bg, rgba(13, 148, 136, 0.04));
+}
+
+/* ── Horizontal rule ──────────────────────────────────────────────────────── */
+.post-content hr {
+  border: none;
+  border-top: 2px solid var(--border-clr, #e5e7eb);
+  margin-block: 40px;
+}
+
+/* ── Post footer ──────────────────────────────────────────────────────────── */
+.post-footer {
+  margin-top: 60px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-clr, #e5e7eb);
+}
+
+/* ── Mobile ───────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .post-article {
+    padding-block: 32px 60px;
+  }
+
+  .post-content h2 { font-size: 19px; margin-top: 36px; }
+  .post-content h3 { font-size: 16px; }
+
+  .post-content pre {
+    padding: 14px;
+    font-size: 13px;
+  }
+}

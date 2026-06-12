@@ -25,6 +25,7 @@
     - custom css link
   -->
   <link rel="stylesheet" href="/assets/css/csscopy.css">
+  <link rel="stylesheet" href="/assets/css/mobile_fixes.css">
 
   <!-- 
     - google font link
@@ -319,13 +320,22 @@
           </div>
 
           <div class="newsletter-form-container">
-            <form action="" class="newsletter-form">
-              <input type="email" name="email_address" placeholder="Enter email address" class="input-field" required>
-              <button type="submit" class="btn btn-secondary">
+            <form action="" class="newsletter-form" id="subscribe-form" novalidate>
+              <input type="email" id="subscribe-email" name="email" placeholder="Enter email address" class="input-field" required autocomplete="email">
+
+              <button type="submit" class="btn btn-secondary" id="subscribe-btn">
                 Subscribe
                 <ion-icon name="mail" aria-hidden="true"></ion-icon>
               </button>
             </form>
+            <p id="subscribe-status" style="
+                  margin-top: 12px;
+                  font-size: 14px;
+                  min-height: 20px;
+                  display: none;">
+
+            </p>
+
           </div>
         </div>
       </section>
@@ -333,6 +343,22 @@
     </article>
   </main>
 
+  <!--
+
+  Netlify Forms
+
+  
+-->
+  <form name="blog-drafts" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="blog-drafts">
+  <input type="hidden" name="bot-field">
+  <input type="text"   name="title">
+  <input type="text"   name="date">
+  <input type="text"   name="category">
+  <textarea            name="draft"></textarea>
+  <input type="text"   name="source_url">
+</form>
+ 
   <!-- 
     - #FOOTER
   -->

@@ -298,7 +298,66 @@ const additionalStyles = `
 }
 `;
 
+// Form submit 
+
+(function () {
+    const form = document.getElementById("subscribe-form");
+    const btn = document.getElementById("subscribe-btn");
+    const status = document.getElementById("subscribe-status");
+    const input = document.getElementById("subscribe-email");
+
+    if (!form) return;
+
+    form.addEventListener("submit", async function (e){
+        e.preventDefault();
+
+        const email = input.value.trim();
+
+        if (!email) return;
+
+        // loading state
+
+        btn.disabled = true;
+        btn.textContent = "Subscribing...";
+        status.style.display = "none";
+
+        try {
+            const res = await fetch("/.netlify/functions/subscribe", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email}),
+            });
+
+            const data = await res.json();
+            if (res.ok && data.success){
+                //successful submission
+                status.textContent = "✓ You're subscribed! Check your inbox. Thank you!";
+                status.style.color = "var(--accent-clr, #0d9488";
+                status.style.display = "block"
+                form.reset();
+            } else{
+                // Unssuccessful
+                status.textContent = data.error || "Something went wrong. Please try again.";
+                status.style.color = "#ef4444";
+                status.style.display = "block";
+
+            }}
+            catch (err) {
+                status.textContent = "Network erro. Please try again.";
+                status.style.color = "#ef4444";
+                status.style.display = "block";
+                
+            }
+            finally{
+                btn.disabled = false;
+                btn.innerHTML = 'Subscribe <ion-icon name="mail" aria-hidden= "true"></ion-icon>';
+            }
+            });
+        
+    })();
+
 // Inject additional styles
 const styleSheet = document.createElement('style');
 styleSheet.textContent = additionalStyles;
 document.head.appendChild(styleSheet);
+

@@ -1,0 +1,209 @@
+ 
+ 
+ 
+ /* Fixes:
+  - Hero section stacking on small screens
+  - Nav overflow / hamburger menu
+  - Blog cards wrapping properly
+  - Footer columns stacking
+  - Terminal animation scaling
+  - Font sizes scaling down gracefully
+  - Offer/split section stacking
+*/
+ 
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+ 
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+ 
+/* ── Container ────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .container {
+    padding-inline: 16px;
+  }
+}
+ 
+/* ── Hero section ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero .container {
+    flex-direction: column;
+    text-align: center;
+    gap: 32px;
+  }
+ 
+  .hero-content {
+    order: 1;
+  }
+ 
+  .hero-visual {
+    order: 2;
+    width: 100%;
+  }
+ 
+  .hero-title {
+    font-size: clamp(22px, 7vw, 36px);
+  }
+ 
+  .hero-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+ 
+  /* Terminal window shrinks gracefully */
+  .terminal-window {
+    width: 100%;
+    max-width: 360px;
+    margin-inline: auto;
+    font-size: 13px;
+  }
+}
+ 
+/* ── About section ────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .about-content {
+    order: 1;
+    text-align: center;
+  }
+ 
+  .about-banner {
+    order: 0;
+    margin-inline: auto;
+    max-width: 280px;
+  }
+ 
+  .about-list {
+    text-align: left;
+    display: inline-block;
+  }
+}
+ 
+/* ── Services / skills grid ───────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .grid-list {
+    grid-template-columns: 1fr;
+  }
+}
+ 
+@media (min-width: 600px) and (max-width: 900px) {
+  .grid-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+ 
+/* ── Blog cards ───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .featured-articles {
+    flex-direction: column;
+    gap: 24px;
+  }
+ 
+  .articles-column {
+    width: 100%;
+  }
+ 
+  .blog-container {
+    grid-template-columns: 1fr;
+  }
+}
+ 
+/* ── Offer / split section ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .offer {
+    flex-direction: column;
+  }
+ 
+  .offer-banner {
+    width: 100%;
+    min-height: 220px;
+    order: -1; /* image on top */
+  }
+ 
+  .offer-content {
+    width: 100%;
+  }
+}
+ 
+/* ── Newsletter ───────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .newsletter .container {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+ 
+  .newsletter-form {
+    flex-direction: column;
+    width: 100%;
+  }
+ 
+  .newsletter-form .input-field,
+  .newsletter-form .btn {
+    width: 100%;
+  }
+}
+ 
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .footer-top.grid-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+ 
+  .footer-brand {
+    grid-column: 1 / -1; /* full width on top */
+  }
+}
+ 
+@media (max-width: 480px) {
+  .footer-top.grid-list {
+    grid-template-columns: 1fr;
+  }
+}
+ 
+/* ── Typography scaling ───────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .h2.section-title {
+    font-size: clamp(20px, 6vw, 28px);
+  }
+ 
+  .section-text {
+    font-size: 15px;
+  }
+}
+ 
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .btn {
+    padding-inline: 20px;
+    padding-block: 10px;
+    font-size: 14px;
+  }
+}
+ 
+/* ── Extended nav (top bar) ───────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .extended-nav {
+    padding-inline: 16px;
+  }
+}
+ 
+/* ── Back to top button ───────────────────────────────────────────────────── */
+.back-top-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+}
+ 
+@media (max-width: 480px) {
+  .back-top-btn {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+ 
