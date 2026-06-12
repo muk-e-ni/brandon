@@ -1,5 +1,13 @@
 [
   {
+    "title": "Weekly Cyber Briefing: June 05, 2026",
+    "image": "/images/blog/default.png",
+    "excerpt": "",
+    "date": "12/06/2026",
+    "url": "blogs/weekly-cyber-briefing-june-05-2026.html",
+    "preview": "POST"
+  },
+  {
     "title": "HackTheBox Module: Linux Fundamentals",
     "image": "/images/blog/linuxfundamentals.png",
     "excerpt": "In this challenge, I exploited a vulnerable login form using SQL injection to gain access to the admin panel...",
@@ -13,6 +21,6 @@
     "excerpt": "This writeup explores how I found and exploited a file upload vulnerability to execute arbitrary code on the target...",
     "date": "9/10/2025",
     "url": "blogs/ctf-file-upload.html",
-    "preview":" GAIN KNOWLEDGE ON DNS"
+    "preview": " GAIN KNOWLEDGE ON DNS"
   }
 ]
