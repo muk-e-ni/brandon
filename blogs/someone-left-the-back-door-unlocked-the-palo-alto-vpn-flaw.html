@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Someone Left the Back Door Unlocked: The Palo Alto VPN Flaw — Brandon Mukeni</title>
+  <meta name="description" content="">
+ 
+  <link rel="icon" href="/favicon-package/favicon.svg" type="image/svg+xml" sizes="any">
+  <link rel="icon" href="/favicon-package/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon-package/apple-touch-icon.png">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+ 
+  <link rel="stylesheet" href="/assets/css/csscopy.css">
+  <link rel="stylesheet" href="/assets/css/post.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+ 
+<body id="top">
+ 
+  <!-- NAV (matches index.html exactly) -->
+  <div class="extended-nav">
+    <div class="logo-nav">
+      <a href="/templates/bcreative_page.html" class="logo">
+        <img src="/images/logo/logo_white.png" width="100" height="20" alt="Brandon Logo" class="logo-light">
+        <img src="/images/logo/logo_teal.png"  width="100" height="20" alt="Brandon Logo" class="logo-dark">
+      </a>
+    </div>
+    <button class="header-action-btn theme-toggle" aria-label="Toggle theme" data-theme-toggler>
+      <ion-icon name="moon-outline" class="moon-icon"></ion-icon>
+      <ion-icon name="sunny-outline" class="sun-icon"></ion-icon>
+    </button>
+  </div>
+ 
+  <header class="header" data-header>
+    <div class="container">
+      <nav class="navbar" data-navbar>
+        <div class="navbar-top">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_white.png" width="100" height="25" alt="Brandon Logo">
+          </a>
+          <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
+            <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+        <ul class="navbar-list">
+          <li class="navbar-item"><a href="/index.html"              class="navbar-link" data-nav-link>Home</a></li>
+          <li class="navbar-item"><a href="/templates/aboutme.html"  class="navbar-link" data-nav-link>About Me</a></li>
+          <li class="navbar-item"><a href="/templates/projects.html" class="navbar-link" data-nav-link>Projects</a></li>
+          <li class="navbar-item"><a href="/templates/writeups.html" class="navbar-link" data-nav-link>Write-ups</a></li>
+          <li class="navbar-item"><a href="/templates/contacts.html" class="navbar-link" data-nav-link>Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-action">
+        <button class="header-action-btn nav-open-btn" aria-label="menu" data-nav-toggler>
+          <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+      <div class="overlay" data-nav-toggler data-overlay></div>
+    </div>
+  </header>
+ 
+  <main>
+    <article class="post-article">
+      <div class="container">
+ 
+        <!-- Post header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-type-badge">BLOG</span>
+            <time datetime="2026-06-16" class="post-date">June 16, 2026</time>
+          </div>
+          <h1 class="post-title">Someone Left the Back Door Unlocked: The Palo Alto VPN Flaw</h1>
+          
+          <div class="post-divider"></div>
+        </header>
+ 
+        <!-- Post body (converted from the markdown) -->
+        <div class="post-content">
+          <h1>Someone Left the Back Door Unlocked: The Palo Alto VPN Flaw</h1>
+<p>Imagine buying a state-of-the-art deadbolt for your front door, only to find out anyone can unlock it just by politely jiggling the handle. That�s essentially what�s happening right now with Palo Alto Networks� GlobalProtect VPN. </p>
+<p>Palo Alto just dropped a warning about a massive security hole (tracked as CVE-2026-0257) that hackers are actively exploiting in the wild. It�s what we call an "authentication bypass" bug. In plain English? Attackers can walk right past the "Username and Password" screen and gain access to corporate networks without needing any credentials at all. </p>
+<p>This caught my attention because VPNs are supposed to be the secure gateway to the castle. In the enterprise world, Palo Alto is often treated as the gold standard�the gear you buy when you want to sleep easy at night. Seeing a critical zero-day like this being actively abused is a sobering reminder: in cybersecurity, there is no such thing as "set it and forget it." Even the giants have bad days.</p>
+<p>If you or your company use GlobalProtect, this isn�t a "put it on the to-do list for next week" situation. This is a "drop your coffee and patch right now" emergency. Check your PAN-OS versions immediately and apply Palo Alto�s updates. If you can't patch today, look up their temporary mitigations and disable external access if possible. </p>
+<p>Before I go, it�s worth noting that it�s a chaotic week all around. If you use Splunk Enterprise to monitor your network, they just disclosed a nasty flaw (CVSS 9.8) that lets attackers run code without logging in. Also, on the AI front, the U.S. government just ordered Anthropic to abruptly cut off access to their Claude Fable 5 and Mythos 5 models for foreign nationals. </p>
+<p>It's noisy out there. Go patch your VPN, and I'll catch you next week!</p>
+<p>Cheers,</p>
+<p>Your Friendly Neighborhood Security Nerd</p>
+<hr />
+<p><em>Main Source: <a href="https://thehackernews.com/2026/06/palo-alto-warns-of-active-exploitation.html">The Hacker News</a></em></p>
+<p><em>Other Sources</em></p>
+<ul>
+<li><a href="https://thehackernews.com/2026/06/us-orders-anthropic-to-suspend-fable-5.html">The Hacker News</a></li>
+<li><a href="https://www.anthropic.com/news/fable-mythos-access">Anthropic</a></li>
+</ul>
+<p><em>Originally drafted by my bi-weekly cyber briefing agent - Mon, 15 Jun 2026 11:47:32 +0530</em></p>
+        </div>
+ 
+        <!-- Back link -->
+        <div class="post-footer">
+          <a href="/templates/writeups.html" class="btn btn-secondary">
+            ← Back to all writeups
+          </a>
+        </div>
+ 
+      </div>
+    </article>
+  </main>
+ 
+  <!-- FOOTER (matches index.html) -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top section grid-list">
+        <div class="footer-brand">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_teal.png" width="100" height="48" alt="Brandon Logo">
+          </a>
+          <p class="footer-text">Cybersecurity student passionate about technology, security, and innovation.</p>
+        </div>
+        <ul class="footer-list">
+          <p class="footer-list-title">Connect</p>
+          <li><a href="https://github.com/muk-e-ni/"          class="footer-link"><ion-icon name="logo-github"></ion-icon> Github</a></li>
+          <li><a href="https://www.linkedin.com/in/brandon-mukeni-46276236b/" class="footer-link"><ion-icon name="logo-linkedin"></ion-icon> LinkedIn</a></li>
+          <li><a href="https://discord.com/users/1130262077957746739"         class="footer-link"><ion-icon name="logo-discord"></ion-icon> Discord</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Explore</p></li>
+          <li><a href="/templates/projects.html" class="footer-link">Projects</a></li>
+          <li><a href="/templates/writeups.html" class="footer-link">Writeups</a></li>
+          <li><a href="/templates/about.html"    class="footer-link">About</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Contact</p></li>
+          <li class="footer-list-item">
+            <ion-icon name="mail" aria-hidden="true"></ion-icon>
+            <a href="mailto:contact@brandonmukeni.com" class="footer-link">Email Me</a>
+          </li>
+          <li class="footer-list-item">
+            <ion-icon name="location" aria-hidden="true"></ion-icon>
+            <address class="address">Nairobi, Kenya</address>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Brandon Mukeni. All rights reserved.</p>
+        <p class="footer-credit">Made with love and bugs</p>
+      </div>
+    </div>
+  </footer>
+ 
+  <a href="#top" class="back-top-btn" aria-label="back to top" data-back-top-btn>
+    <ion-icon name="arrow-up-outline" aria-hidden="true"></ion-icon>
+  </a>
+ 
+  <script src="/assets/js/jscopy.js" defer></script>
+  <script src="/assets/js/theme.js"  defer></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
