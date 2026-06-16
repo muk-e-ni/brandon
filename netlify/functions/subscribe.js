@@ -8,7 +8,7 @@ exports.handler = async(event) => {
     //Only allow POST 
 
     if(event.httpMethod !== "POST"){
-        return { statuCode: 405, body: "Method Not Allowed"};
+        return { statusCode: 405, body: "Method Not Allowed"};
     }
 
     // Parse the email form body (json and URL-encoded)
@@ -39,7 +39,8 @@ exports.handler = async(event) => {
             body: JSON.stringify({error: "Please enter a valid email address."}),
         };
      }
-     const RESEND_API_KEY = ProcessingInstruction.env.RESEND_API_KEY;
+
+     const RESEND_API_KEY = process.env.RESEND_API_KEY;
      if (!RESEND_API_KEY){
         console.error( "RESEND api key not set in Netlify environment variables");
         return { statusCode: 500, body: JSON.stringify({error: "Server configuration error"}) };
@@ -47,7 +48,7 @@ exports.handler = async(event) => {
      }
      try{
         // Add contact to resend 
-        const contactRes = await fetch("https://api/resend.com/contacts", {
+        const contactRes = await fetch("https://api.resend.com/contacts", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${RESEND_API_KEY}`,
@@ -62,9 +63,9 @@ exports.handler = async(event) => {
         if (!contactRes.ok){
             const err = await contactRes.json();
 
-            if (!contactRes.status !==422){
+            if (contactRes.status !== 422){
                 console.error( "Resend contact error: ", err);
-                return{ statuCode: 500, body: JSON.stringify({ error: "Could not save subscription."}) };
+                return{ statusCode: 500, body: JSON.stringify({ error: "Could not save subscription."}) };
                 }
         
         }
@@ -88,10 +89,10 @@ exports.handler = async(event) => {
                 <p style = "margin: 00 16px; font-size: 15px; line-height: 1.7; color: #374151;"> You're now subscribed to updates from <strong> bcreative.com</strong>.
                 Whenever I publish a new blog or writeup, you'll get a quick update. </p>
                 <p style = "margin: 0 0 16px; font-size: 15px; line-height: 1.7; color: #374151;"> No spam, no newsletters about newsletters. Just the posts </p>
-                <a href = "https://bcreative.com" style = "display: inline-block; background: #0d9488; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">
+                <a href = "https://brandon-web.netlify.app" style = "display: inline-block; background: #0d9488; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">
                 Visit the site → </a>
 
-                <p style = "margin : 32px 0 0; font-size: 12px: color: #9ca3af;"> Don't want these emails? <a href="{{{RESEND_UNSUBSCRIBE_URL}}}"style = "color: #9ca3af;"> Unsubscribe </a>
+                <p style = "margin: 32px 0 0; font-size: 12px; color: #9ca3af;"> Don't want these emails? <a href="{{{RESEND_UNSUBSCRIBE_URL}}}"style = "color: #9ca3af;"> Unsubscribe </a>
                 
                 </p>
                 </div>`,
@@ -109,8 +110,8 @@ exports.handler = async(event) => {
      } catch (err){
         console.error("Subscribe function error:", err);
         return {
-            statuCode: 500,
-            body:JSON.stringify({error: "Something went wrong. Please try again."}),
+            statusCode: 500,
+            body: JSON.stringify({error: "Something went wrong. Please try again."}),
         };
      }
     };

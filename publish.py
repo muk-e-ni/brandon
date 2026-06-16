@@ -22,9 +22,9 @@ from datetime import datetime
 from pathlib import Path
 import markdown
 
-REPO_ROOT = Path(os.getenv("."))
+REPO_ROOT = Path(".")
 
-BLOGS_DIR = REPO_ROOT / "blogs" /"writeups"
+BLOGS_DIR = REPO_ROOT / "blogs" 
 IMAGES_DIR = REPO_ROOT / "images" / "blog"
 POSTS_JSON = REPO_ROOT / "posts.json"
 
@@ -47,7 +47,7 @@ def parse_frontmatter(text: str) -> tuple[dict, str]:
 
             return meta, parts[2].strip()
         
-        return meta, text.strip()
+    return meta, text.strip()
     
  
 def extract_title_from_body(body: str) -> str:
@@ -71,6 +71,7 @@ def md_to_html_body(md_text: str) -> str:
     """Convert markdown to HTML, with syntax highlighting extension if available."""
     extensions = ["extra", "nl2br"]
     try:
+        importlib.import_module("pygments")
         extensions.append("codehilite")
     except Exception:
         pass
@@ -363,8 +364,7 @@ def publish(md_path_str: str):
     git_push(REPO_ROOT, files_to_commit, commit_msg)
  
     print(f"\n✅ Done! Your post will be live at:")
-    print(f"   https://your-site.netlify.app/blogs/{slug}.html")
-    print(f"   (replace 'your-site' with your actual Netlify subdomain)\n")
+    print(f"   https://brandon-web.netlify.app/blogs/{slug}.html")
 
 
  
@@ -374,6 +374,8 @@ def publish_with_notify(md_path_str: str):
     """
     from dotenv import load_dotenv
     load_dotenv()
+
+
  
     publish(md_path_str)
  

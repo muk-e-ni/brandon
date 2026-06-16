@@ -146,15 +146,15 @@
 
 /* Contact Form */
 .contact-form-section {
-  padding: 80px 0;
+  padding: 30px 0;
   background-color: #f8f9fa;
 }
 
 .form-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   background: white;
-  padding: 50px;
+  padding: 20px;
   border-radius: 15px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
 }
@@ -178,7 +178,7 @@
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .form-group {
@@ -188,9 +188,9 @@
 
 .form-label {
   color: #2c3e50;
-  font-weight: 500;
+  font-weight: 400;
   margin-bottom: 8px;
-  font-size: 0.95rem;
+  font-size:0.8 rem;
 }
 
 .form-input,
@@ -252,7 +252,7 @@
 
 .faq-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 30px;
   max-width: 1000px;
   margin: 50px auto 0;
@@ -294,17 +294,17 @@
   }
   
   .hero-text {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     padding: 0 20px;
   }
   
   .contact-grid {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 24px;
   }
   
   .form-container {
-    padding: 30px 25px;
+    padding: 10px 25px;
     margin: 0 20px;
   }
   
@@ -334,7 +334,7 @@
   .contact-options,
   .contact-form-section,
   .faq-section {
-    padding: 60px 0;
+    padding: 50px 0;
   }
   
   .social-links {

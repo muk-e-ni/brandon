@@ -96,21 +96,7 @@ img, video {
   }
 }
  
-/* ── Blog cards ───────────────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .featured-articles {
-    flex-direction: column;
-    gap: 24px;
-  }
- 
-  .articles-column {
-    width: 100%;
-  }
- 
-  .blog-container {
-    grid-template-columns: 1fr;
-  }
-}
+
  
 /* ── Offer / split section ────────────────────────────────────────────────── */
 @media (max-width: 768px) {

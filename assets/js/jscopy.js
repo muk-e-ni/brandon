@@ -253,6 +253,7 @@ const additionalStyles = `
     color: var(--text-secondary);
     line-height: 1.5;
     margin: 10px 0;
+    font-size:1.3rem;
 }
 
 /* Card Badge */
@@ -360,4 +361,12 @@ const additionalStyles = `
 const styleSheet = document.createElement('style');
 styleSheet.textContent = additionalStyles;
 document.head.appendChild(styleSheet);
+
+document.addEventListener("DOMContentLoaded", function(){
+    var yrElement = document.getElementById("cp-yr");
+    if (yrElement) {
+        var currentYr = new Date().getFullYear();
+        yrElement.textContent = currentYr.toString();
+    }
+})
 
