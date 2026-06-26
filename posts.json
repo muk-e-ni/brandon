@@ -1,5 +1,13 @@
 [
   {
+    "title": "Untitled Post",
+    "image": "/images/blog/default.png",
+    "excerpt": "",
+    "date": "26/06/2026",
+    "url": "blogs/untitled-post.html",
+    "preview": "POST"
+  },
+  {
     "title": "Someone Left the Back Door Unlocked: The Palo Alto VPN Flaw",
     "image": "/images/news/default-news.jpg",
     "excerpt": "",
