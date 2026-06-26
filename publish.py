@@ -117,6 +117,8 @@ def build_post_html(meta: dict, html_body: str, slug: str) -> str:
  
   <link rel="stylesheet" href="/assets/css/csscopy.css">
   <link rel="stylesheet" href="/assets/css/post.css">
+  <link rel="stylesheet" href="/assets/css/mobile_fixes.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
