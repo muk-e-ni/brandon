@@ -1,11 +1,11 @@
 [
   {
     "title": "Brutus - Writeup",
-    "image": "/images/blog/default.png",
-    "excerpt": "",
+    "image": "/images/blog/Brutus/9e4d9103-d723-4062-b57f-0a001833056e.png",
+    "excerpt": "Linux log analysis: Exploring auth.log and wtmp files",
     "date": "26/06/2026",
     "url": "blogs/brutus-writeup.html",
-    "preview": "POST"
+    "preview": "HTB Brutus: Log Analysis"
   },
   {
     "title": "Untitled Post",
@@ -18,10 +18,10 @@
   {
     "title": "Someone Left the Back Door Unlocked: The Palo Alto VPN Flaw",
     "image": "/images/news/default-news.jpg",
-    "excerpt": "",
+    "excerpt": "Insight on the Palo Alto VPN flaw ",
     "date": "16/06/2026",
     "url": "blogs/someone-left-the-back-door-unlocked-the-palo-alto-vpn-flaw.html",
-    "preview": "POST"
+    "preview": "News on the Palot Alto VPN Flaw"
   },
   {
     "title": "Weekly Cyber Briefing: June 05, 2026",
