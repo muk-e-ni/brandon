@@ -83,7 +83,6 @@
  
         <!-- Post body (converted from the markdown) -->
         <div class="post-content">
-          <h1>Cap - Writeup</h1>
 <blockquote>
 <p><strong>Platform:</strong> HackTheBox<br />
 <strong>Difficulty:</strong> Easy<br />
@@ -102,16 +101,16 @@
 * <strong>Port 22:</strong> SSH (OpenSSH 8.2p1)<br />
 * <strong>Port 80:</strong> HTTP (Gunicorn running a "Security Dashboard")</p>
 <p>With HTTP open, I decided to check out the website in my browser. While poking around the dashboard, I noticed a section for PCAP files. When I clicked on it, it redirected me to a URL structure that looked like this: <code>http://10.129.45.187/data/1</code>. </p>
-<p><img alt="dashboard" src="dashboard_Screenshot 2026-07-03 124042.png" /></p>
+<p><img alt="dashboard" src="/images/cap/dashboard_Screenshot 2026-07-03 124042.png" /></p>
 <p>Seeing that <code>/data/1</code> in the URL immediately made me think of IDOR (Insecure Direct Object Reference). I wondered what would happen if I started messing with that number.</p>
 <hr />
 <h2>Exploitation</h2>
 <h3>Getting User</h3>
 <p>I looked at Nathan's profile on the site, but there wasn't anything special there. My gut told me to try manipulating the ID in the URL. I decided to change the <code>1</code> to a <code>0</code> (<code>http://10.129.45.187/data/0</code>), and boom—it actually worked! </p>
-<p><img alt="using id 0 " src="id_change_Screenshot 2026-07-03 123656.png" /></p>
+<p><img alt="using id 0 " src="/images/cap/id_change_Screenshot 2026-07-03 123656.png" /></p>
 <p>I saw some really juicy data on the page. Since the web page had a built-in option to download the PCAP file, and I knew there was an open FTP server on the machine, I figured this packet capture might contain some actual network traffic from someone logging in. </p>
 <p>I downloaded the file and opened it up in Wireshark. Since I was targeting FTP, I simply typed <code>ftp</code> into the display filter to see what I could find.</p>
-<p><img alt="wireshark " src="pcap_Screenshot 2026-07-03 125145.png" /></p>
+<p><img alt="wireshark " src="/images/cap/pcap_Screenshot 2026-07-03 125145.png" /></p>
 <p>And there it was! A clear-text login capture showing Nathan logging into the FTP server with the password <code>Buck3tH...0RM3!</code>. </p>
 <p>Knowing that reuse is super common, I immediately tried using those exact same credentials to SSH into the machine as <code>nathan</code>:</p>
 <pre><code class="language-bash">└─$ ssh nathan@10.129.45.187
