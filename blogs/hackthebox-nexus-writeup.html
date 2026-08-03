@@ -112,23 +112,23 @@
 2. <code>billing</code> (Status 302)</p>
 <p>I went ahead and added both subdomains to my <code>/etc/hosts</code> file so my browser could actually reach them.</p>
 <p>First, I checked out the <code>git</code> subdomain. It led to a Gitea instance:</p>
-<p><img alt="gitea web screenshot" src="/images/nexus/gitea_Screenshot 2026-07-23 153218.png" /></p>
+<p><img alt="gitea web screenshot" src="/images/blog/nexus/gitea_Screenshot 2026-07-23 153218.png" /></p>
 <p>I started digging around Gitea and found a public repository called <code>krayin-docker-setup</code>. While looking through the files, I noticed an exposed <code>.env</code> file containing some default database passwords. But what really saved the day was looking at the Git commit history. I spotted a deleted line in a previous commit containing a CRM password: <code>N27xh!!2ucY04</code>. </p>
-<p><img alt="crm password on env file" src="/images/nexus/git_commit_Screenshot 2026-07-23 155551.png" /></p>
+<p><img alt="crm password on env file" src="/images/blog/nexus/git_commit_Screenshot 2026-07-23 155551.png" /></p>
 <p>Now, armed with this password, I headed over to the <code>billing</code> subdomain. I first tried logging in with the default email from the <code>.env</code> file (<code>laravel@krayincrm.com</code>), but no luck. Then I remembered the emails I grabbed earlier. I tried logging in as the hiring manager using <code>j.matthew@nexus.htb</code> and the password <code>N27xh...ucY04</code>... and boom, we were in!</p>
-<p><img alt="jones dashboard" src="/images/nexus/krayin_dashboard_Screenshot 2026-07-23 160805.png" /></p>
+<p><img alt="jones dashboard" src="/images/blog/nexus/krayin_dashboard_Screenshot 2026-07-23 160805.png" /></p>
 <hr />
 <h2>Exploitation</h2>
 <p>The dashboard itself was pretty quiet, but it did show the CRM version: Krayin CRM version 2.2.0. </p>
 <p>I did a bit of research online and discovered that this version is vulnerable to CVE-2026-38526. The key vector here is the <code>POST /admin/tinymce/upload</code> endpoint, which let me execute code and grab an initial shell on the machine.</p>
 <p>The endpoint is on the upload file on the compose email tab. I used burpsuite to inteject the traffic then edit the file contents.</p>
-<p><img alt="tinymce endpoint" src="/images/nexus/burp_krayin_enpoint_Screenshot 2026-07-23 184732.png" /></p>
+<p><img alt="tinymce endpoint" src="/images/blog/nexus/burp_krayin_enpoint_Screenshot 2026-07-23 184732.png" /></p>
 <p>First I saved a simple php payload with .png extension, then uploaded it via the endpoint. From the interjected traffic, I made some edits and removed the .png to php. If successfull, a reply is sent back with the file location where that file got saved. </p>
-<p><img alt="planting payload" src="/images/nexus/bursuite_repeater_section_uploading_php_file_Screenshot 2026-07-23 190116-1.png" /></p>
+<p><img alt="planting payload" src="/images/blog/nexus/bursuite_repeater_section_uploading_php_file_Screenshot 2026-07-23 190116-1.png" /></p>
 <p>Using the GET method executes the payload as shown below:</p>
-<p><img alt="running payload.php" src="/images/nexus/burp_get_method_running_php_Screenshot 2026-07-23 190415.png" /></p>
+<p><img alt="running payload.php" src="/images/blog/nexus/burp_get_method_running_php_Screenshot 2026-07-23 190415.png" /></p>
 <p>This was just a simple test to confirm whether I could plant a payload and execute it. Since it was a success, I planted a php reverse shell script. </p>
-<p><img alt="reverse shell instance" src="/images/nexus/reverse_shell_php_script_executionScreenshot 2026-07-23 201543.png" /></p>
+<p><img alt="reverse shell instance" src="/images/blog/nexus/reverse_shell_php_script_executionScreenshot 2026-07-23 201543.png" /></p>
 <p>Oh, remember you ought to have a listener up based on the specified script's ip and port.</p>
 <p>Once I got the shell, it felt a bit shaky, so I immediately stabilized it using:</p>
 <pre><code class="language-bash">script /dev/null -c /bin/bash
@@ -222,7 +222,7 @@ open(os.path.join(&quot;.git&quot;,&quot;refs&quot;,&quot;heads&quot;,&quot;main
 print(&quot;Done: &quot;+sha)
 </code></pre>
 <p>First, I created a new repository on Gitea using my logged-in user and flagged it as a <strong>template</strong> repository.</p>
-<p><img alt="creating template repo" src="/images/nexus/making-rooted-repoScreenshot 2026-07-25 122037.png" /></p>
+<p><img alt="creating template repo" src="/images/blog/nexus/making-rooted-repoScreenshot 2026-07-25 122037.png" /></p>
 <p>Next, on the victim machine inside <code>/tmp</code>, I generated a new SSH keypair:</p>
 <pre><code class="language-bash">ssh-keygen -t ed25519 -f /tmp/mykey -N ''
 </code></pre>
