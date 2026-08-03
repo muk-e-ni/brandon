@@ -1,5 +1,13 @@
 [
   {
+    "title": "HackTheBox \u2014 Nexus Writeup",
+    "image": "![nexus logo](nexus.png)",
+    "excerpt": "Gaining access on Nexus",
+    "date": "03/08/2026",
+    "url": "blogs/hackthebox-nexus-writeup.html",
+    "preview": "HTB WRITEUP"
+  },
+  {
     "title": "Brutus - Writeup",
     "image": "/images/blog/Brutus/9e4d9103-d723-4062-b57f-0a001833056e.png",
     "excerpt": "Linux log analysis: Exploring auth.log and wtmp files",

