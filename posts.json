@@ -1,5 +1,13 @@
 [
   {
+    "title": "HackTheBox \u2014 Cap Writeup",
+    "image": "cap.png",
+    "excerpt": "Gaining access on Cap",
+    "date": "03/08/2026",
+    "url": "blogs/hackthebox-cap-writeup.html",
+    "preview": "HTB WRITEUP"
+  },
+  {
     "title": "HackTheBox \u2014 Nexus Writeup",
     "image": "cap.png",
     "excerpt": "Gaining access on Nexus",
