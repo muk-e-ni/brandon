@@ -83,7 +83,6 @@
  
         <!-- Post body (converted from the markdown) -->
         <div class="post-content">
-          <h1>How to Flash Code into an ESP8266 ESP-01 Using an Arduino (Without Buying Extra Adapters!)</h1>
 <p>Hello there! Let me guess: you just got your hands on an ESP8266 (maybe you've seen it written as ESP-01) for the first time, and you're staring at it blankly because you have no idea how to actually program it. Or maybe you've done it before, but you've completely forgotten the spaghetti-wiring layout required to get this tiny board into programming mode. </p>
 <p>If any of that, welcome to the club. You are exactly where I was. </p>
 <p>When I first bought the ESP8266, I thought, <em>"Awesome, a cheap Wi-Fi module! I'll just plug it into my Arduino and go."</em> Yeah... absolutely not. It didn't take long for me to realize this thing is its own independent beast, and getting code onto it is a whole journey. I ran into almost every frustrating roadblock possible. Reasearch can take hours but it pays.</p>
@@ -112,7 +111,7 @@
 <hr />
 <h2>The Wiring: Bypassing the Arduino</h2>
 <p>We don't actually want the Arduino's main microcontroller chip (the ATmega328P) to interfere with our upload. Instead, we want to use the Arduino purely as a physical bridge—a USB-to-Serial adapter. </p>
-<p>To do this, we are going to connect the Arduino's <strong>RESET</strong> pin directly to <strong>GND</strong>. This temporarily disables the Arduino chip and lets us talk directly to the ESP8266.</p>
+<p>To do this, we will connect the Arduino's <strong>RESET</strong> pin directly to <strong>GND</strong>. This temporarily disables the Arduino chip and lets us talk directly to the ESP8266.</p>
 <h3>The Wiring Layout</h3>
 <p>Here is how the magic happens. Keep an eye on your voltages! <strong>The ESP8266 runs strictly on 3.3V.</strong> If you connect it to 5V, you will fry it instantly.</p>
 <ol>
@@ -128,15 +127,15 @@
 <li>Connect the other end of the <strong>2 kΩ resistor</strong> to <strong>GND</strong>.</li>
 <li>The <strong>Tx</strong> of the ESP8266 can connect to the <strong>Tx</strong> of the Arduino directly.</li>
 </ol>
-<p><img alt="alt text" src="fritzing_sketch_screenshot.png" /></p>
+<p><img alt="alt text" src="images/tech blog images/fritzing_sketch_screenshot.png" /></p>
 <p><em>If you want to view or edit the layout yourself, you can download my original Fritzing project file here:</em> <br />
-<a href="https://github.com/muk-e-ni/FritzingSketches/blob/main/ESP8266_sketch.fzz">esp fritzing file on github</a></p>
+<a href="https://github.com/muk-e-ni/FritzingSketches/blob/main/ESP8266_sketch.fzz">esp Fritzing file on github</a></p>
 <hr />
 <h2>Getting Down to Business: Flashing the Code</h2>
 <p>Now that your desk looks like a colorful spiderweb, plug your Arduino's USB cable into your laptop. </p>
 <p>If everything is wired up right, you should see a quick blue light flash on the ESP8266. That flash is your green light—it means the chip has safely booted into programming mode!</p>
 <h3>Arduino IDE Settings</h3>
-<p>Before you upload, you have to configure your IDE to match the ESP8266 hardware. Go to <strong>Tools</strong> and change your settings to match this list:</p>
+<p>Before you upload, configure your IDE to match the ESP8266 hardware. Go to <strong>Tools</strong> and change your settings to match this list:</p>
 <ul>
 <li><strong>Board:</strong> <code>Generic ESP8266 Module</code></li>
 <li><strong>Port:</strong> Select your Arduino's COM port (e.g., <code>COM3 - Arduino Uno</code>)</li>
