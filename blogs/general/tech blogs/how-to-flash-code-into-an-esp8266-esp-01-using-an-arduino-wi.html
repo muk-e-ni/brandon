@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Flash Code into an ESP8266 ESP-01 Using an Arduino (Without Buying Extra Adapters!) — Brandon Mukeni</title>
+  <meta name="description" content="">
+ 
+  <link rel="icon" href="/favicon-package/favicon.svg" type="image/svg+xml" sizes="any">
+  <link rel="icon" href="/favicon-package/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon-package/apple-touch-icon.png">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+ 
+  <link rel="stylesheet" href="/assets/css/csscopy.css">
+  <link rel="stylesheet" href="/assets/css/post.css">
+  <link rel="stylesheet" href="/assets/css/mobile_fixes.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+ 
+<body id="top">
+ 
+  <!-- NAV (matches index.html exactly) -->
+  <div class="extended-nav">
+    <div class="logo-nav">
+      <a href="/templates/bcreative_page.html" class="logo">
+        <img src="/images/logo/logo_white.png" width="100" height="20" alt="Brandon Logo" class="logo-light">
+        <img src="/images/logo/logo_teal.png"  width="100" height="20" alt="Brandon Logo" class="logo-dark">
+      </a>
+    </div>
+    <button class="header-action-btn theme-toggle" aria-label="Toggle theme" data-theme-toggler>
+      <ion-icon name="moon-outline" class="moon-icon"></ion-icon>
+      <ion-icon name="sunny-outline" class="sun-icon"></ion-icon>
+    </button>
+  </div>
+ 
+  <header class="header" data-header>
+    <div class="container">
+      <nav class="navbar" data-navbar>
+        <div class="navbar-top">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_white.png" width="100" height="25" alt="Brandon Logo">
+          </a>
+          <button class="nav-close-btn" aria-label="close menu" data-nav-toggler>
+            <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+        <ul class="navbar-list">
+          <li class="navbar-item"><a href="/index.html"              class="navbar-link" data-nav-link>Home</a></li>
+          <li class="navbar-item"><a href="/templates/aboutme.html"  class="navbar-link" data-nav-link>About Me</a></li>
+          <li class="navbar-item"><a href="/templates/projects.html" class="navbar-link" data-nav-link>Projects</a></li>
+          <li class="navbar-item"><a href="/templates/writeups.html" class="navbar-link" data-nav-link>Write-ups</a></li>
+          <li class="navbar-item"><a href="/templates/contacts.html" class="navbar-link" data-nav-link>Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-action">
+        <button class="header-action-btn nav-open-btn" aria-label="menu" data-nav-toggler>
+          <ion-icon name="menu-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+      <div class="overlay" data-nav-toggler data-overlay></div>
+    </div>
+  </header>
+ 
+  <main>
+    <article class="post-article">
+      <div class="container">
+ 
+        <!-- Post header -->
+        <header class="post-header">
+          <div class="post-meta">
+            <span class="post-type-badge">BLOG</span>
+            <time datetime="2026-09-18" class="post-date">September 18, 2026</time>
+          </div>
+          <h1 class="post-title">How to Flash Code into an ESP8266 ESP-01 Using an Arduino (Without Buying Extra Adapters!)</h1>
+          
+          <div class="post-divider"></div>
+        </header>
+ 
+        <!-- Post body (converted from the markdown) -->
+        <div class="post-content">
+<p>Hello there! Let me guess: you just got your hands on an ESP8266 (maybe you've seen it written as ESP-01) for the first time, and you're staring at it blankly because you have no idea how to actually program it. Or maybe you've done it before, but you've completely forgotten the spaghetti-wiring layout required to get this tiny board into programming mode. </p>
+<p>If any of that, welcome to the club. You are exactly where I was. </p>
+<p>When I first bought the ESP8266, I thought, <em>"Awesome, a cheap Wi-Fi module! I'll just plug it into my Arduino and go."</em> Yeah... absolutely not. It didn't take long for me to realize this thing is its own independent beast, and getting code onto it is a whole journey. I ran into almost every frustrating roadblock possible. Reasearch can take hours but it pays.</p>
+<p>In this guide, I’m going to walk you through how to flash and program your ESP8266 using nothing but an Arduino Uno and a few basic components. No special  adapters required! Let’s get into it.</p>
+<hr />
+<h2>What You Need</h2>
+<p>Before we start wiring, raid your electronics bin for these components:<br />
+* <strong>Arduino Uno</strong> (we’ll be using this as our programmer)<br />
+* <strong>ESP8266 ESP-01 module</strong> (labeled sometimes as ES-01)<br />
+* <strong>1 kΩ (kilo-ohm) resistor</strong> <br />
+* <strong>2 kΩ (kilo-ohm) resistor</strong> <br />
+* <strong>Breadboard</strong> and jumper wires</p>
+<hr />
+<h2>First Things First: Software Setup</h2>
+<p>The ESP8266 isn't just an Arduino accessory—it has its own processor, memory, and can run completely independently. Because of this, we need to teach our Arduino IDE how to talk to it.</p>
+<h3>Installing the ESP8266 Board Support</h3>
+<ol>
+<li>Make sure you have the Arduino IDE installed. If not, grab it from the official site <a href="https://www.arduino.cc/en/software/">here.</a></li>
+<li>Open the IDE and navigate to <strong>File</strong> -&gt; <strong>Preferences</strong>.</li>
+<li>Look for the <strong>Additional Boards Manager URLs</strong> field and paste this link right there: <br />
+<code>https://arduino.esp8266.com/stable/package_esp8266com_index.json</code></li>
+<li>Click <strong>OK</strong>.</li>
+<li>Now, head over to the <strong>Boards Manager</strong> (usually on the left sidebar, or under <code>Tools -&gt; Board -&gt; Boards Manager</code>), search for <code>esp8266</code>, and hit <strong>Install</strong>.</li>
+</ol>
+<p>Once that's done, your IDE is officially ready. Now comes the fun (and slightly confusing) part: the physical wiring.</p>
+<hr />
+<h2>The Wiring: Bypassing the Arduino</h2>
+<p>We don't actually want the Arduino's main microcontroller chip (the ATmega328P) to interfere with our upload. Instead, we want to use the Arduino purely as a physical bridge—a USB-to-Serial adapter. </p>
+<p>To do this, we are going to connect the Arduino's <strong>RESET</strong> pin directly to <strong>GND</strong>. This temporarily disables the Arduino chip and lets us talk directly to the ESP8266.</p>
+<h3>The Wiring Layout</h3>
+<p>Here is how the magic happens. Keep an eye on your voltages! <strong>The ESP8266 runs strictly on 3.3V.</strong> If you connect it to 5V, you will fry it instantly.</p>
+<ol>
+<li><strong>Power &amp; Enable:</strong> Connect the Arduino's <strong>3.3V</strong> pin to a power rail on your breadboard. Run connections from this rail to both the ESP8266's <strong>VCC (3.3V)</strong> pin and its <strong>EN (Enable)</strong> pin. <br />
+<em>(Note: The EN pin needs to be pulled high so the chip draws enough current to boot up and operate properly.)</em></li>
+<li><strong>Ground &amp; Programming Mode:</strong> Connect the Arduino's <strong>GND</strong> to the breadboard. Connect both the ESP8266's <strong>GND</strong> pin and its <strong>GPIO0</strong> pin to this ground rail. <br />
+<em>(Crucial tip: Pulling GPIO0 to GND at startup is what forces the ESP8266 into programming mode so we can flash code onto it.)</em></li>
+<li><strong>The Arduino Bypass:</strong> Connect the Arduino's <strong>RESET</strong> pin directly to <strong>GND</strong>.</li>
+<li><strong>RX and TX (The Level Divider):</strong> This is where I got tripped up. The Arduino’s TX terminal sends out 5V signals, but the ESP8266's RX pin can only handle 3.3V. We need a voltage divider to step that down.</li>
+<li>Connect the <strong>RX</strong> pin of the Arduino to one leg of your <strong>1 kΩ resistor</strong>.</li>
+<li>Connect the other end of that <strong>1 kΩ resistor</strong> to the <strong>RX</strong> pin of the ESP8266.</li>
+<li>Connect the <strong>RX</strong> pin of the ESP8266 to one leg of the <strong>2 kΩ resistor</strong>.</li>
+<li>Connect the other end of the <strong>2 kΩ resistor</strong> to <strong>GND</strong>.</li>
+<li>The <strong>Tx</strong> of the ESP8266 can connect to the <strong>Tx</strong> of the Arduino directly.</li>
+</ol>
+<p><img alt="alt text" src="/images/tech blog images/fritzing_sketch_screenshot.png" /></p>
+<p><em>If you want to view or edit the layout yourself, you can download my original Fritzing project file here:</em> <br />
+<a href="https://github.com/muk-e-ni/FritzingSketches/blob/main/ESP8266_sketch.fzz">esp fritzing file on github</a></p>
+<hr />
+<h2>Getting Down to Business: Flashing the Code</h2>
+<p>Now that your desk looks like a colorful spiderweb, plug your Arduino's USB cable into your laptop. </p>
+<p>If everything is wired up right, you should see a quick blue light flash on the ESP8266. That flash is your green light—it means the chip has safely booted into programming mode!</p>
+<h3>Arduino IDE Settings</h3>
+<p>Before you upload, you have to configure your IDE to match the ESP8266 hardware. Go to <strong>Tools</strong> and change your settings to match this list:</p>
+<ul>
+<li><strong>Board:</strong> <code>Generic ESP8266 Module</code></li>
+<li><strong>Port:</strong> Select your Arduino's COM port (e.g., <code>COM3 - Arduino Uno</code>)</li>
+<li><strong>Upload Speed:</strong> <code>115200</code></li>
+<li><strong>Crystal Frequency:</strong> <code>26MHz</code></li>
+<li><strong>Flash Size:</strong> <code>1MB</code></li>
+<li><strong>Flash Frequency:</strong> <code>40MHz</code></li>
+</ul>
+<h3>The Test Code</h3>
+<p>Copy and paste this test sketch into your IDE (don't forget to swap in your home Wi-Fi credentials!):</p>
+<pre><code class="language-cpp">#include &lt;ESP8266WiFi.h&gt;
+
+const char* ssid = &quot;YOUR_WIFI_NAME&quot;;     // Replace with your Wi-Fi Name
+const char* password = &quot;YOUR_WIFI_PASS&quot;; // Replace with your Wi-Fi Password
+
+WiFiServer server(80);
+String arduinoData = &quot;No data yet&quot;;
+
+void setup() {
+  Serial.begin(115200); // Communication line to the Arduino
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
+
+  server.begin();
+  Serial.println(&quot;&quot;);
+  Serial.println(WiFi.localIP()); // Prints IP address to Serial Monitor
+}
+
+void loop() {
+  // 1. Check for incoming data from the Arduino
+  if (Serial.available() &gt; 0) {
+    arduinoData = Serial.readStringUntil('\n');
+  }
+
+  // 2. Check for connections from your website
+  WiFiClient client = server.available();
+  if (!client) return;
+
+  while(!client.available()){ delay(1); }
+
+  String request = client.readStringUntil('\r');
+  client.flush();
+
+  // Process commands from the phone web page
+  if (request.indexOf(&quot;/LED=ON&quot;) != -1)  { Serial.println(&quot;CMD:ON&quot;); }
+  if (request.indexOf(&quot;/LED=OFF&quot;) != -1) { Serial.println(&quot;CMD:OFF&quot;); }
+
+  // 3. Send the HTML Web Page to your phone
+  client.println(&quot;HTTP/1.1 200 OK&quot;);
+  client.println(&quot;Content-Type: text/html&quot;);
+  client.println(&quot;&quot;); 
+  client.println(&quot;&lt;!DOCTYPE HTML&gt;&quot;);
+  client.println(&quot;&lt;html&gt;&quot;);
+  client.println(&quot;&lt;head&gt;&lt;title&gt;Arduino Control&lt;/title&gt;&lt;/head&gt;&quot;);
+  client.println(&quot;&lt;body style='text-align:center; font-family:sans-serif;'&gt;&quot;);
+  client.println(&quot;&lt;h1&gt;Arduino Wireless Control&lt;/h1&gt;&quot;);
+
+  client.print(&quot;&lt;p&gt;Current Sensor Data: &lt;b&gt;&quot;);
+  client.print(arduinoData);
+  client.println(&quot;&lt;/b&gt;&lt;/p&gt;&quot;);
+
+  client.println(&quot;&lt;br&gt;&lt;br&gt;&quot;);
+  client.println(&quot;&lt;a href=\&quot;/LED=ON\&quot;&gt;&lt;button style='font-size:20px; background-color:green; color:white; padding:10px 20px;'&gt;Turn ON&lt;/button&gt;&lt;/a&gt;&quot;);
+  client.println(&quot;&lt;a href=\&quot;/LED=OFF\&quot;&gt;&lt;button style='font-size:20px; background-color:red; color:white; padding:10px 20px; margin-left:10px;'&gt;Turn OFF&lt;/button&gt;&lt;/a&gt;&quot;);
+  client.println(&quot;&lt;br&gt;&lt;br&gt;&lt;button onclick='window.location.reload();' style='font-size:16px; padding:5px 10px;'&gt;Refresh Data&lt;/button&gt;&quot;);
+
+  client.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+  delay(1);
+}
+
+</code></pre>
+<p>Double-check your credentials, click the checkmark to <strong>Verify</strong> the code, and if there are no syntax errors, hit <strong>Upload</strong>.</p>
+<blockquote>
+<p><strong>Troubleshooting Moment:</strong> If the IDE fails to connect and you don't see bytes being written, don't panic. Check your connections. Did you pull GPIO0 to ground? Is the Arduino RESET pin actually grounded? </p>
+<p>In the worst-case scenario, if you accidentally bypassed the level divider, you might have fried the chip. But if you see a blue flash when you cycle the power, your chip is still alive! Take a deep breath, trace your wires, and try again.</p>
+</blockquote>
+<hr />
+<h2>Booting the Firmware and Finding Your IP</h2>
+<p>Once the upload reaches 100%, we need to take the ESP8266 out of "programming mode" and put it into "run mode" so it actually executes our code.</p>
+<ol>
+<li><strong>Power down:</strong> Unplug the USB cable or disconnect the 3.3V power wire.</li>
+<li><strong>Exit programming mode:</strong> Unplug <strong>GPIO0</strong> from the GND rail. (Leave it disconnected/floating).</li>
+<li><strong>Power up:</strong> Plug the 3.3V power back in and connect the USB cable.</li>
+<li>Open your <strong>Serial Monitor</strong> in the Arduino IDE, set the baud rate to <strong>115200</strong>, and look for the output. </li>
+</ol>
+<p>You should see your local IP address printed on the screen! </p>
+<p><em>(Note: If you see gibberish text scrolling on the serial monitor, don't worry. Sometimes the bootloader output gets scrambled. Just quickly unplug the power wire, wait two seconds, and plug it back in to clean up the serial connection.)</em></p>
+<hr />
+<h2>Unlocking the Possibilities: Connecting ESP to Arduino</h2>
+<p>Now that the ESP8266 has its firmware and you've written down its IP address, we want the Arduino to actually talk to it so we can control things (like turning on an LED).</p>
+<ol>
+<li>Unplug the USB cable.</li>
+<li><strong>Enable the Arduino chip:</strong> Disconnect the wire linking Arduino's <strong>RESET</strong> pin to <strong>GND</strong>. Now the ATmega328P is active again!</li>
+<li><strong>Switch Board Settings:</strong> In the IDE, switch your board target back to the Uno: <code>Tools -&gt; Board -&gt; Arduino AVR Boards -&gt; Arduino Uno</code>.</li>
+<li><strong>Change the Data Pins:</strong> Disconnect the ESP8266’s RX/TX pins from the Arduino's hardware serial pins (0 and 1). We are going to use <strong>SoftwareSerial</strong> instead so we don't interfere with our main USB debugging. </li>
+<li>Wire up pins <strong>11</strong> and <strong>12</strong> on the Arduino to act as our Software RX and TX. </li>
+<li>Arduino <strong>Pin 11 (RX)</strong> will receive data from the ESP8266's TX pin. (This can be connected directly because 3.3V signals won't hurt the 5V Arduino).</li>
+<li>Arduino <strong>Pin 12 (TX)</strong> will transmit data to the ESP8266's RX pin. <strong>Remember to pass this pin through your level divider (the 1k and 2k resistors) to drop the 5V signal to 3.3V!</strong></li>
+</ol>
+<p>Now, upload your main Arduino controller code to the Uno:</p>
+<pre><code class="language-cpp">#include &lt;SoftwareSerial.h&gt;
+
+// Arduino Pin 2 (RX) connects to ESP TX
+// Arduino Pin 3 (TX) connects to ESP RX via your resistor divider
+SoftwareSerial espSerial(2, 3); 
+
+const int ledPin = 13; // We will control the Arduino's built-in LED
+unsigned long lastUpdateTime = 0;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  espSerial.begin(115200); // Opens communication line to the ESP-01S
+}
+
+void loop() {
+  // 1. Listen for commands coming from the phone via the ESP-01S
+  if (espSerial.available() &gt; 0) {
+    String command = espSerial.readStringUntil('\n');
+    command.trim();
+
+    if (command == &quot;CMD:ON&quot;) {
+      digitalWrite(ledPin, HIGH); // Turn on the built-in Arduino LED
+    } 
+    else if (command == &quot;CMD:OFF&quot;) {
+      digitalWrite(ledPin, LOW);  // Turn off the built-in Arduino LED
+    }
+  }
+
+  // 2. Automatically send fresh data to the web page every 3 seconds
+  if (millis() - lastUpdateTime &gt; 3000) {
+    int mockSensorValue = analogRead(A0); // Reading an empty pin for testing
+
+    espSerial.print(&quot;Sensor Reading: &quot;);
+    espSerial.print(mockSensorValue);
+    espSerial.print(&quot; (Active for &quot;);
+    espSerial.print(millis() / 1000);
+    espSerial.println(&quot;s)\n&quot;); // \n tells the ESP the message is complete
+
+    lastUpdateTime = millis();
+  }
+}
+
+</code></pre>
+<p>Once uploaded, open your web browser on your phone or laptop (connected to the same Wi-Fi network) and type the IP address you wrote down earlier into the address bar. </p>
+<p>You should see a clean, simple interface that lets you turn the onboard LED (Pin 13) on and off with a single click!</p>
+<hr />
+<h2>Conclusion</h2>
+<p>And there you have it! You’ve just turned a KES 300 Wi-Fi chip and your old trusty Arduino into a mini web server. You can now trigger real-world physical objects from anywhere in your house via a browser. </p>
+<p>Will you run into errors while doing this? Absolutely. Will you question your life decisions around hour two when the serial monitor prints nothing but question marks? Oh, definitely. But once it works, it feels like magic.</p>
+<p>Plus, I finally got to use the high-school algebra behind voltage dividers in real life. I even have a formula to brag about now:</p>
+<p>V<sub>out</sub> = V<sub>in</sub> * (R<sub>2</sub> / (R<sub>1</sub> + R<sub>2</sub>))</p>
+<p>Happy flashing, and may your Wi-Fi signals be strong!</p>
+<hr />
+<h2>Key Takeaways</h2>
+<ul>
+<li><strong>Voltage is King:</strong> The ESP8266 is highly sensitive. It expects 3.3V on both its power pins and its data RX pins. Never feed it 5V directly.</li>
+<li><strong>Boot State Matters:</strong> The state of GPIO0 at startup determines whether the chip runs existing code or waits for a new upload.</li>
+<li><strong>Arduino Bypass:</strong> Grounding the Arduino's Reset pin is an incredibly handy trick that turns your Uno into a transparent USB-to-TTL serial adapter.</li>
+</ul>
+<hr />
+<h2>Resources Used</h2>
+<ul>
+<li><a href="https://www.arduino.cc/en/software/">Arduino IDE Software Download</a></li>
+<li><a href="https://arduino.esp8266.com/stable/package_esp8266com_index.json">ESP8266 Community Board Index Link</a></li>
+<li><a href="https://learn.sparkfun.com/tutorials/voltage-dividers/all">SparkFun's Guide to Voltage Dividers</a></li>
+</ul>
+<hr />
+<p><em>Written by Brandon (Founder BeCreative) • 2026-09-18</em></p>
+        </div>
+ 
+        <!-- Back link -->
+        <div class="post-footer">
+          <a href="/templates/writeups.html" class="btn btn-secondary">
+            ← Back to all writeups
+          </a>
+        </div>
+ 
+      </div>
+    </article>
+  </main>
+ 
+  <!-- FOOTER (matches index.html) -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top section grid-list">
+        <div class="footer-brand">
+          <a href="/templates/bcreative_page.html" class="logo">
+            <img src="/images/logo/logo_teal.png" width="100" height="48" alt="Brandon Logo">
+          </a>
+          <p class="footer-text">Cybersecurity student passionate about technology, security, and innovation.</p>
+        </div>
+        <ul class="footer-list">
+          <p class="footer-list-title">Connect</p>
+          <li><a href="https://github.com/muk-e-ni/"          class="footer-link"><ion-icon name="logo-github"></ion-icon> Github</a></li>
+          <li><a href="https://www.linkedin.com/in/brandon-mukeni-46276236b/" class="footer-link"><ion-icon name="logo-linkedin"></ion-icon> LinkedIn</a></li>
+          <li><a href="https://discord.com/users/1130262077957746739"         class="footer-link"><ion-icon name="logo-discord"></ion-icon> Discord</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Explore</p></li>
+          <li><a href="/templates/projects.html" class="footer-link">Projects</a></li>
+          <li><a href="/templates/writeups.html" class="footer-link">Writeups</a></li>
+          <li><a href="/templates/about.html"    class="footer-link">About</a></li>
+        </ul>
+        <ul class="footer-list">
+          <li><p class="footer-list-title">Contact</p></li>
+          <li class="footer-list-item">
+            <ion-icon name="mail" aria-hidden="true"></ion-icon>
+            <a href="mailto:contact@brandonmukeni.com" class="footer-link">Email Me</a>
+          </li>
+          <li class="footer-list-item">
+            <ion-icon name="location" aria-hidden="true"></ion-icon>
+            <address class="address">Nairobi, Kenya</address>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Brandon Mukeni. All rights reserved.</p>
+        <p class="footer-credit">Made with love and bugs</p>
+      </div>
+    </div>
+  </footer>
+ 
+  <a href="#top" class="back-top-btn" aria-label="back to top" data-back-top-btn>
+    <ion-icon name="arrow-up-outline" aria-hidden="true"></ion-icon>
+  </a>
+ 
+  <script src="/assets/js/jscopy.js" defer></script>
+  <script src="/assets/js/theme.js"  defer></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
